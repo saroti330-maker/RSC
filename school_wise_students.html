@@ -1926,6 +1926,9 @@
                     <button type="button" id="exportCsvBtn" class="btn btn-primary" title="CSV ফাইল ডাউনলোড করুন">
                         <span>📥</span> <span>এক্সেল/CSV</span>
                     </button>
+                    <button type="button" id="dbManageBtn" class="btn btn-secondary" style="border-color:#6366f1; color:#4338ca; font-weight:600;" title="স্থায়ী DB ফাইল ব্যাকআপ ও রিস্টোর">
+                        <span>💾</span> <span>DB ফাইল</span>
+                    </button>
                     <button type="button" id="resetDataBtn" class="btn btn-outline" style="color:var(--danger); border-color:#fca5a5;" title="মূল ২২৬ জনের ডাটায় ফিরে যান">
                         <span>🔄</span> <span>ডাটা রিসেট</span>
                     </button>
@@ -2123,6 +2126,65 @@
                 </div>
             </div>
         </section>
+    </div>
+</div>
+
+<!-- Modal: Database Manager (DB Backup, Restore & Permanent Status) -->
+<div id="dbManageModal" class="modal-overlay" onclick="closeDbModalOnOutside(event)">
+    <div class="modal-content" style="max-width: 650px;" onclick="event.stopPropagation()">
+        <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white;">
+            <h3>
+                <span>💾</span> <span>ডাটাবেজ ফাইল ব্যাকআপ ও রিস্টোর (DB Manager)</span>
+            </h3>
+            <button type="button" class="modal-close" style="color:white;" onclick="closeDbModal()">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+            <!-- DB Status Card -->
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 16px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 20px;">🟢</span>
+                    <strong style="color: #166534; font-size: 15px;">ডাটাবেজ স্ট্যাটাস: স্থায়ীভাবে সংরক্ষিত (IndexedDB Active)</strong>
+                </div>
+                <div style="font-size: 13px; color: #15803d; line-height: 1.6;">
+                    এই ওয়েবসাইটের সমস্ত তথ্য আপনার ডিভাইসের স্থায়ী ব্রাউজার ডাটাবেজে (<strong>IndexedDB</strong>) স্বয়ংক্রিয়ভাবে সংরক্ষিত রয়েছে। <strong>ব্যবহারকারী নিজে কোনো শিক্ষার্থী ডিলিট না করলে এই তথ্য কখনো মুছে যাবে না।</strong>
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: #166534; display: flex; gap: 16px; flex-wrap: wrap;">
+                    <span>🏫 মোট প্রতিষ্ঠান: <strong id="dbSchoolCount">১৯</strong> টি</span>
+                    <span>🎓 মোট শিক্ষার্থী: <strong id="dbStudentCount">২২৬</strong> জন</span>
+                    <span>🕒 সর্বশেষ আপডেট: <strong id="dbLastSavedTime">বর্তমান ডাটা</strong></span>
+                </div>
+            </div>
+
+            <!-- Download DB File Card -->
+            <div style="background: #f8fafc; border: 1px solid var(--gray-200); border-radius: 10px; padding: 18px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="flex: 1; min-width: 260px;">
+                        <div style="font-weight: 700; color: var(--gray-800); font-size: 14px;">📥 সম্পূর্ণ DB ফাইল ডাউনলোড করুন (.json / .db)</div>
+                        <div style="font-size: 12px; color: var(--gray-600); margin-top: 4px;">বর্তমান ২২৬ জন ও আপডেট করা সকল শিক্ষার্থীর পূর্ণ ডাটাবেজ ফাইল নিজের কম্পিউটার বা মোবাইলে স্থায়ী সেভ রাখুন।</div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="exportDbFile()" style="white-space: nowrap; font-weight:600;">
+                        <span>📥</span> <span>DB ব্যাকআপ ডাউনলোড</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload / Restore DB File Card -->
+            <div style="background: #f8fafc; border: 1px solid var(--gray-200); border-radius: 10px; padding: 18px;">
+                <div style="font-weight: 700; color: var(--gray-800); font-size: 14px; margin-bottom: 6px;">📤 পূর্বে সংরক্ষিত DB ফাইল থেকে রিস্টোর করুন</div>
+                <div style="font-size: 12px; color: var(--gray-600); margin-bottom: 12px;">যেকোনো নতুন ডিভাইস বা ব্রাউজারে পূর্বের সংরক্ষিত DB ব্যাকআপ ফাইলটি আপলোড করলেই সাথে সাথে সমস্ত ডাটা ফিরে আসবে।</div>
+                
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <input type="file" id="dbFileInput" accept=".json,.db" style="display: none;" onchange="handleDbFileUpload(event)">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('dbFileInput').click()" style="border-color:#3b82f6; color:#1d4ed8; font-weight:600;">
+                        <span>📁</span> <span>DB ফাইল নির্বাচন করুন</span>
+                    </button>
+                    <span id="selectedDbFileName" style="font-size: 12px; color: var(--gray-500);">কোনো ফাইল নির্বাচন করা হয়নি</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding: 14px 24px; background: #f8fafc; border-top: 1px solid var(--gray-200); text-align: right;">
+            <button type="button" class="btn btn-outline" onclick="closeDbModal()">বন্ধ করুন</button>
+        </div>
     </div>
 </div>
 
@@ -2325,12 +2387,192 @@
         return JSON.parse(JSON.stringify(MASTER_DATA));
     }
 
+    // ==========================================
+    // PERMANENT DATABASE (INDEXEDDB & FILE SYNC)
+    // ==========================================
+    const IDB_NAME = 'SchoolWiseDB_Nilphamari';
+    const IDB_VERSION = 1;
+    const IDB_STORE = 'app_data';
+
+    function openIndexedDB() {
+        return new Promise((resolve) => {
+            if (!window.indexedDB) {
+                resolve(null);
+                return;
+            }
+            const req = indexedDB.open(IDB_NAME, IDB_VERSION);
+            req.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(IDB_STORE)) {
+                    db.createObjectStore(IDB_STORE, { keyPath: 'key' });
+                }
+            };
+            req.onsuccess = (e) => resolve(e.target.result);
+            req.onerror = () => resolve(null);
+        });
+    }
+
+    async function saveToIndexedDB(data) {
+        try {
+            const db = await openIndexedDB();
+            if (!db) return;
+            const tx = db.transaction(IDB_STORE, 'readwrite');
+            const store = tx.objectStore(IDB_STORE);
+            store.put({
+                key: 'schools_master',
+                data: data,
+                timestamp: new Date().toISOString()
+            });
+        } catch (e) {
+            console.warn('IndexedDB save warning:', e);
+        }
+    }
+
+    async function syncWithIndexedDB() {
+        try {
+            const db = await openIndexedDB();
+            if (!db) return;
+            const tx = db.transaction(IDB_STORE, 'readonly');
+            const store = tx.objectStore(IDB_STORE);
+            const req = store.get('schools_master');
+            req.onsuccess = () => {
+                if (req.result && req.result.data && Array.isArray(req.result.data) && req.result.data.length > 0) {
+                    const storedTime = localStorage.getItem('scsp_last_saved');
+                    const idbTime = req.result.timestamp;
+                    if (!storedTime || (idbTime && new Date(idbTime) > new Date(storedTime))) {
+                        schoolsData = req.result.data;
+                        try {
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(schoolsData));
+                            localStorage.setItem('scsp_last_saved', idbTime);
+                        } catch(e) {}
+                        renderAllSchools();
+                        updateKpiValues();
+                        if (activeKpiMode === 'villages') renderVillageTags();
+                    }
+                } else {
+                    saveToIndexedDB(schoolsData);
+                }
+            };
+        } catch (e) {
+            console.warn('IndexedDB sync error:', e);
+        }
+    }
+
     function saveData() {
+        const now = new Date().toISOString();
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(schoolsData));
+            localStorage.setItem('scsp_last_saved', now);
         } catch(e) {
             console.error('Failed to save to localStorage:', e);
         }
+
+        saveToIndexedDB(schoolsData);
+
+        const timeEl = document.getElementById('dbLastSavedTime');
+        if (timeEl) {
+            const d = new Date();
+            timeEl.textContent = d.toLocaleDateString('bn-BD') + ' ' + d.toLocaleTimeString('bn-BD');
+        }
+
+        try {
+            if (window.location.protocol.startsWith('http')) {
+                fetch('/api/save-database', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(schoolsData)
+                }).catch(() => {});
+            }
+        } catch(e) {}
+    }
+
+    function openDbModal() {
+        let totalSt = 0;
+        schoolsData.forEach(s => totalSt += (s.students ? s.students.length : 0));
+        const scEl = document.getElementById('dbSchoolCount');
+        const stEl = document.getElementById('dbStudentCount');
+        const timeEl = document.getElementById('dbLastSavedTime');
+        if (scEl) scEl.textContent = schoolsData.length;
+        if (stEl) stEl.textContent = totalSt;
+        if (timeEl) {
+            const saved = localStorage.getItem('scsp_last_saved');
+            if (saved) {
+                const d = new Date(saved);
+                timeEl.textContent = d.toLocaleDateString('bn-BD') + ' ' + d.toLocaleTimeString('bn-BD');
+            } else {
+                timeEl.textContent = 'মূল ডাটাবেজ সংযুক্ত';
+            }
+        }
+        document.getElementById('dbManageModal').classList.add('active');
+    }
+
+    function closeDbModal() {
+        document.getElementById('dbManageModal').classList.remove('active');
+    }
+
+    function closeDbModalOnOutside(e) {
+        if (e.target.id === 'dbManageModal') {
+            closeDbModal();
+        }
+    }
+
+    function exportDbFile() {
+        const backupObj = {
+            app: 'SchoolWise_Students_SCSP_Nilphamari',
+            version: '3.0',
+            exported_at: new Date().toISOString(),
+            total_schools: schoolsData.length,
+            schools: schoolsData
+        };
+        const jsonStr = JSON.stringify(backupObj, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const dateStr = new Date().toISOString().slice(0, 10);
+        link.href = url;
+        link.download = `SchoolWise_Database_Backup_${dateStr}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast('DB ব্যাকআপ ফাইল সফলভাবে ডাউনলোড হয়েছে!', '💾');
+    }
+
+    function handleDbFileUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const nameEl = document.getElementById('selectedDbFileName');
+        if (nameEl) nameEl.textContent = file.name;
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            try {
+                const content = evt.target.result;
+                const parsed = JSON.parse(content);
+                let importedSchools = null;
+                if (parsed.schools && Array.isArray(parsed.schools)) {
+                    importedSchools = parsed.schools;
+                } else if (Array.isArray(parsed)) {
+                    importedSchools = parsed;
+                }
+                if (!importedSchools || importedSchools.length === 0) {
+                    alert('ভুল ফাইল ফরম্যাট! এই ফাইলে সঠিক বিদ্যালয়ের তথ্য পাওয়া যায়নি।');
+                    return;
+                }
+                if (confirm(`আপনি কি "${file.name}" ফাইলটি থেকে ডাটা রিস্টোর করতে চান? এতে বর্তমান তথ্য আপডেট হয়ে যাবে।`)) {
+                    schoolsData = importedSchools;
+                    saveData();
+                    renderAllSchools();
+                    updateKpiValues();
+                    if (activeKpiMode === 'villages') renderVillageTags();
+                    closeDbModal();
+                    showToast(`ডাটাবেজ ফাইল সফলভাবে রিস্টোর হয়েছে! মোট ${importedSchools.length}টি প্রতিষ্ঠান লোড হয়েছে।`, '✅');
+                }
+            } catch(err) {
+                alert('ফাইলটি পড়া সম্ভব হয়নি। অনুগ্রহ করে সঠিক JSON বা DB ফাইল নির্বাচন করুন।');
+            }
+        };
+        reader.readAsText(file);
     }
 
     function showToast(msg, icon = '✅') {
@@ -3548,8 +3790,11 @@
         document.body.removeChild(link);
     });
 
+    document.getElementById('dbManageBtn').addEventListener('click', openDbModal);
+
     // Initialize Application
     renderApp();
+    syncWithIndexedDB();
 </script>
 
 </body>
