@@ -130,3 +130,4 @@ if __name__ == '__main__':
         export_json()
     else:
         print("Usage: python manage_db.py [stats|schools|search <term>|export-json]")
+
