@@ -2592,6 +2592,9 @@
         }
 
     </style>
+    <!-- Google Firebase Realtime Database SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -3122,6 +3125,9 @@
                     <button type="button" id="dbManageBtn" class="btn btn-secondary" style="border-color:#6366f1; color:#4338ca; font-weight:600;" title="স্থায়ী DB ফাইল ব্যাকআপ ও রিস্টোর">
                         <span>💾</span> <span>DB ফাইল</span>
                     </button>
+                    <button type="button" id="headerCloudSyncBtn" class="btn btn-secondary" onclick="openDbModal('cloud')" style="border-color:#0284c7; color:#0369a1; font-weight:600;" title="Google Firebase ক্লাউড লাইভ সিঙ্ক">
+                        <span id="headerCloudIcon">☁️</span> <span id="headerCloudText">ক্লাউড সিঙ্ক</span>
+                    </button>
                     <button type="button" id="resetDataBtn" class="btn btn-outline" style="color:var(--danger); border-color:#fca5a5;" title="মূল ২২৬ জনের ডাটায় ফিরে যান">
                         <span>🔄</span> <span>ডাটা রিসেট</span>
                     </button>
@@ -3508,6 +3514,13 @@
                         </div>
                     </div>
 
+                    <!-- Cloud Sync Config Button -->
+                    <div style="margin-bottom: 14px;">
+                        <button type="button" class="btn btn-secondary" onclick="openDbModal('cloud')" style="width: 100%; border-color:#0284c7; color:#0369a1; font-weight:600; background: #f0f9ff;">
+                            <span>☁️</span> <span>Google Firebase ক্লাউড সিঙ্ক কনফিগার করুন</span>
+                        </button>
+                    </div>
+
                     <!-- Download DB -->
                     <div style="margin-bottom: 14px;">
                         <button type="button" class="btn btn-primary" onclick="exportDbFile()" style="width: 100%;">
@@ -3570,13 +3583,80 @@
 <!-- Modal: Database Manager (DB Backup, Restore & Permanent Status) -->
 <div id="dbManageModal" class="modal-overlay" onclick="closeDbModalOnOutside(event)">
     <div class="modal-content" style="max-width: 650px;" onclick="event.stopPropagation()">
-        <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a, #0284c7); color: white;">
             <h3>
-                <span>💾</span> <span>ডাটাবেজ ফাইল ব্যাকআপ ও রিস্টোর (DB Manager)</span>
+                <span>☁️</span> <span>ডাটাবেজ ও ক্লাউড সিঙ্ক ম্যানেজার (DB & Cloud Sync)</span>
             </h3>
             <button type="button" class="modal-close" style="color:white;" onclick="closeDbModal()">&times;</button>
         </div>
         <div class="modal-body" style="padding: 24px;">
+            <!-- 1. Google Firebase Cloud Sync Card -->
+            <div id="cloudSyncCard" style="background: #f0f9ff; border: 1.5px solid #7dd3fc; border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(14, 165, 233, 0.08);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 26px;">☁️</span>
+                        <div>
+                            <strong style="color: #0369a1; font-size: 15.5px;">গুগল ফায়ারবেস ক্লাউড সিঙ্ক (Multi-Device Live Sync)</strong>
+                            <div style="font-size: 12px; color: #0284c7; margin-top: 2px;">যেকোনো ডিভাইস থেকে তথ্য আপডেট করলে সব ডিভাইসে স্বয়ংক্রিয়ভাবে লাইভ দেখতে পাবেন।</div>
+                        </div>
+                    </div>
+                    <span id="cloudStatusBadge" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #e2e8f0; color: #475569;">
+                        <span id="cloudStatusDot">⚪</span> <span id="cloudStatusText">লোকাল মোড (ক্লাউড কানেক্ট করা হয়নি)</span>
+                    </span>
+                </div>
+
+                <!-- Active Connected Info Banner (shown when connected) -->
+                <div id="cloudConnectedBanner" style="display: none; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; font-size: 12.5px; color: #065f46;">
+                    <div style="font-weight: 700; margin-bottom: 4px;">✅ ক্লাউড ডাটাবেজ লাইভ সংযুক্ত রয়েছে!</div>
+                    <div id="cloudDbUrlDisplay" style="font-family: monospace; font-size: 11.5px; color: #047857; word-break: break-all; margin-bottom: 8px;"></div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="syncWithFirebase(true)" style="font-size: 12px; padding: 5px 12px; background: #059669; border-color:#059669;">
+                            <span>🔄</span> <span>ক্লাউড থেকে এখনই রিফ্রেশ</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="pushLocalDataToFirebase()" style="font-size: 12px; padding: 5px 12px; border-color:#10b981; color:#047857;">
+                            <span>📤</span> <span>লোকাল ডাটা ক্লাউডে আপলোড</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="disconnectFirebase()" style="font-size: 12px; padding: 5px 12px; color:#ef4444; border-color:#fca5a5;">
+                            <span>🔌</span> <span>ডিসকানেক্ট</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Config Input Area (shown when not connected or in edit mode) -->
+                <div id="cloudConfigArea" style="background: white; border: 1px solid #bae6fd; border-radius: 8px; padding: 14px; margin-bottom: 12px;">
+                    <label for="firebaseConfigInput" style="display: block; font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">
+                        🔗 Firebase Realtime Database URL অথবা Config পেস্ট করুন:
+                    </label>
+                    <div style="font-size: 11.5px; color: #64748b; margin-bottom: 8px;">
+                        Firebase Console থেকে পাওয়া Realtime Database URL (যেমন: <code>https://your-project-default-rtdb.firebaseio.com/</code>) এখানে দিন:
+                    </div>
+                    <input type="text" id="firebaseConfigInput" class="form-control" placeholder="https://your-project-default-rtdb.firebaseio.com/" style="margin-bottom: 10px; font-size: 13px;">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary" onclick="handleFirebaseConfigSave()" style="font-weight: 600; background: #0284c7; border-color: #0284c7;">
+                            <span>💾</span> <span>ক্লাউড ডাটাবেজ কানেক্ট করুন</span>
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="toggleFirebaseHelp()" style="font-size: 12px; color: #0369a1; border-color: #7dd3fc;">
+                            <span>❓</span> <span>কীভাবে তৈরি করবেন? (সহজ গাইড)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible Help Guide -->
+                <div id="firebaseHelpBox" style="display: none; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; font-size: 12px; line-height: 1.6; color: #334155;">
+                    <div style="font-weight: 700; color: #0f172a; margin-bottom: 6px; font-size: 13px;">📖 মাত্র ২ মিনিটে ফ্রি Firebase ডাটাবেজ তৈরি করার নিয়ম:</div>
+                    <ol style="margin-left: 18px; margin-bottom: 8px;">
+                        <li><a href="https://console.firebase.google.com/" target="_blank" style="color: #0284c7; font-weight: 600;">Firebase Console (console.firebase.google.com)</a>-এ গিয়ে আপনার জিমেইল দিয়ে লগইন করুন।</li>
+                        <li><strong>"Add project"</strong>-এ ক্লিক করে প্রজেক্টের নাম দিন (যেমন: <code>scsp-students</code>) এবং Continue চাপুন।</li>
+                        <li>বাম পাশের মেনু থেকে <strong>Build ➔ Realtime Database</strong>-এ ক্লিক করে <strong>"Create Database"</strong> চাপুন।</li>
+                        <li>Security Rules পেজে <strong>"Start in test mode"</strong> সিলেক্ট করে <strong>Enable</strong> করুন (যাতে যেকোনো ডিভাইস তথ্য পড়তে ও লিখতে পারে)।</li>
+                        <li>স্ক্রিনের উপরে প্রদর্শিত ডাটাবেজ লিঙ্কটি (যেমন: <code>https://scsp-students-default-rtdb.firebaseio.com/</code>) কপি করে উপরের ইনপুটে বসিয়ে <strong>"কানেক্ট করুন"</strong> চাপুন!</li>
+                    </ol>
+                    <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 10px; color: #92400e; font-size: 11.5px;">
+                        💡 <strong>টিপস:</strong> আপনি একবার কোডের <code>DEFAULT_FIREBASE_DB_URL</code> এ লিঙ্কটি বসিয়ে গিটহাবে পুশ দিলে আপনার অন্যান্য মোবাইল বা কম্পিউটারে আর লিঙ্ক পেস্ট করতে হবে না, সাইট ওপেন করলেই স্বয়ংক্রিয়ভাবে লাইভ সিঙ্ক চালু হয়ে যাবে!
+                    </div>
+                </div>
+            </div>
+
             <!-- DB Status Card -->
             <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 16px; margin-bottom: 20px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
@@ -4001,6 +4081,10 @@
         localStorage.setItem(AUTH_USER_KEY, newId);
         localStorage.setItem(AUTH_PASS_KEY, newPass);
 
+        if (firebaseDb) {
+            firebaseDb.ref('scsp_nilphamari/auth').set({ user: newId, pass: newPass }).catch(() => {});
+        }
+
         const userEl = document.getElementById('headerUserName');
         if (userEl) userEl.textContent = newId;
 
@@ -4012,6 +4096,306 @@
     const MASTER_DATA = JSON.parse(document.getElementById('studentsMasterJson').textContent);
     const SCHOOL_OPTIONS = JSON.parse(document.getElementById('schoolOptionsJson').textContent);
     const STORAGE_KEY = 'scsp_nilphamari_students_v3';
+
+    // ==========================================
+    // GOOGLE FIREBASE CLOUD DATABASE CONFIGURATION
+    // ==========================================
+    // আপনার তৈরি করা Firebase Realtime Database এর URL নিচে সরাসরি লিখে দিতে পারেন।
+    // অথবা ব্রাউজার থেকেই 'DB ফাইল' ➔ 'ক্লাউড সিঙ্ক' এ গিয়ে পেস্ট করে কানেক্ট করতে পারবেন:
+    const DEFAULT_FIREBASE_DB_URL = ""; 
+    // উদাহরণ: "https://scsp-nilphamari-default-rtdb.firebaseio.com/"
+
+    const FIREBASE_CONFIG_STORAGE_KEY = 'scsp_nilphamari_firebase_config';
+    let firebaseApp = null;
+    let firebaseDb = null;
+    let isFirebaseConnected = false;
+    let isSyncingFromCloud = false;
+
+    // Check URL query parameters (allows one-click configuration via shared link)
+    (function checkUrlFirebaseParam() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('fb_db')) {
+                const urlVal = urlParams.get('fb_db');
+                if (urlVal) {
+                    let dbUrl = urlVal.trim();
+                    if (!dbUrl.endsWith('/')) dbUrl += '/';
+                    localStorage.setItem(FIREBASE_CONFIG_STORAGE_KEY, JSON.stringify({ databaseURL: dbUrl }));
+                }
+            }
+        } catch(e) {}
+    })();
+
+    function getActiveFirebaseConfig() {
+        try {
+            const stored = localStorage.getItem(FIREBASE_CONFIG_STORAGE_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (parsed && (parsed.databaseURL || parsed.apiKey)) return parsed;
+            }
+        } catch(e) {}
+
+        if (DEFAULT_FIREBASE_DB_URL && DEFAULT_FIREBASE_DB_URL.trim()) {
+            let u = DEFAULT_FIREBASE_DB_URL.trim();
+            if (!u.endsWith('/')) u += '/';
+            return { databaseURL: u };
+        }
+        return null;
+    }
+
+    function initFirebase() {
+        if (typeof firebase === 'undefined') {
+            console.warn('Firebase SDK compat library is not loaded');
+            updateCloudUIState('offline', 'Firebase লাইব্রেরি সংযোগ পাওয়া যায়নি (অফলাইন)');
+            return;
+        }
+
+        const config = getActiveFirebaseConfig();
+        if (!config || !config.databaseURL) {
+            updateCloudUIState('offline', 'লোকাল মোড (ক্লাউড কানেক্ট করা হয়নি)');
+            return;
+        }
+
+        try {
+            if (!config.apiKey) {
+                config.apiKey = "AIzaSySCSPNilphamariDefaultKey";
+            }
+
+            if (!firebase.apps.length) {
+                firebaseApp = firebase.initializeApp(config);
+            } else {
+                firebaseApp = firebase.app();
+            }
+            firebaseDb = firebase.database();
+
+            updateCloudUIState('connecting', 'ক্লাউড ডাটাবেজে সংযোগ হচ্ছে...', config.databaseURL);
+
+            // Listen for connection status
+            const connectedRef = firebaseDb.ref('.info/connected');
+            connectedRef.on('value', (snap) => {
+                if (snap.val() === true) {
+                    isFirebaseConnected = true;
+                    updateCloudUIState('connected', '🟢 ক্লাউড সংযুক্ত (লাইভ সিঙ্ক চালু)', config.databaseURL);
+                } else {
+                    isFirebaseConnected = false;
+                    updateCloudUIState('connecting', '🟡 ক্লাউড সংযোগের অপেক্ষায়...', config.databaseURL);
+                }
+            });
+
+            // Listen for schools data changes in real-time
+            const schoolsRef = firebaseDb.ref('scsp_nilphamari/schools');
+            schoolsRef.on('value', (snapshot) => {
+                const cloudData = snapshot.val();
+                if (cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
+                    const localStr = JSON.stringify(schoolsData);
+                    const cloudStr = JSON.stringify(cloudData);
+                    if (localStr !== cloudStr) {
+                        isSyncingFromCloud = true;
+                        schoolsData = cloudData;
+                        try {
+                            localStorage.setItem(STORAGE_KEY, cloudStr);
+                            localStorage.setItem('scsp_last_saved', new Date().toISOString());
+                        } catch(e) {}
+                        saveToIndexedDB(schoolsData);
+
+                        renderApp();
+                        renderHomeOverview();
+                        renderReports();
+                        updateSettingCounters();
+                        showToast('🔄 ক্লাউড ডাটাবেজ থেকে ডাটা স্বয়ংক্রিয়ভাবে আপডেট হয়েছে!', '☁️');
+                        setTimeout(() => { isSyncingFromCloud = false; }, 300);
+                    }
+                } else {
+                    // Cloud database is empty on first setup: seed with current local master data
+                    if (schoolsData && schoolsData.length > 0) {
+                        schoolsRef.set(schoolsData);
+                        console.log('Master data seeded to Firebase Cloud Database');
+                    }
+                }
+            }, (err) => {
+                console.warn('Firebase sync read error:', err);
+                updateCloudUIState('error', '⚠️ ক্লাউড পারমিশন এরর (Firebase Rules চেক করুন)', config.databaseURL);
+            });
+
+            // Listen for Auth credentials in real-time
+            const authRef = firebaseDb.ref('scsp_nilphamari/auth');
+            authRef.on('value', (snapshot) => {
+                const authData = snapshot.val();
+                if (authData && authData.user && authData.pass) {
+                    localStorage.setItem(AUTH_USER_KEY, authData.user);
+                    localStorage.setItem(AUTH_PASS_KEY, authData.pass);
+                    const uEls = [document.getElementById('headerUserName'), document.getElementById('sidebarUserName'), document.getElementById('mobileUserName')];
+                    uEls.forEach(el => { if (el) el.textContent = authData.user; });
+                }
+            });
+
+        } catch(err) {
+            console.error('Firebase initialization error:', err);
+            updateCloudUIState('error', 'ক্লাউড সংযোগ ব্যর্থ: ' + err.message, config ? config.databaseURL : '');
+        }
+    }
+
+    function updateCloudUIState(status, text, dbUrl = '') {
+        const badge = document.getElementById('cloudStatusBadge');
+        const dot = document.getElementById('cloudStatusDot');
+        const statusText = document.getElementById('cloudStatusText');
+        const headerIcon = document.getElementById('headerCloudIcon');
+        const headerText = document.getElementById('headerCloudText');
+        const banner = document.getElementById('cloudConnectedBanner');
+        const urlDisplay = document.getElementById('cloudDbUrlDisplay');
+        const configArea = document.getElementById('cloudConfigArea');
+
+        if (status === 'connected') {
+            if (badge) { badge.style.background = '#dcfce7'; badge.style.color = '#15803d'; }
+            if (dot) dot.textContent = '🟢';
+            if (statusText) statusText.textContent = text;
+            if (headerIcon) headerIcon.textContent = '🟢';
+            if (headerText) headerText.textContent = 'লাইভ সিঙ্ক';
+            if (banner) banner.style.display = 'block';
+            if (urlDisplay) urlDisplay.textContent = 'ডাটাবেজ লিঙ্ক: ' + (dbUrl || 'Firebase Realtime Database');
+            if (configArea) configArea.style.display = 'none';
+        } else if (status === 'connecting') {
+            if (badge) { badge.style.background = '#fef3c7'; badge.style.color = '#b45309'; }
+            if (dot) dot.textContent = '🟡';
+            if (statusText) statusText.textContent = text;
+            if (headerIcon) headerIcon.textContent = '🟡';
+            if (headerText) headerText.textContent = 'সিঙ্ক হচ্ছে...';
+            if (banner) banner.style.display = 'block';
+            if (urlDisplay) urlDisplay.textContent = 'ডাটাবেজ লিঙ্ক: ' + (dbUrl || 'কানেকশন রিকোয়েস্ট পাঠানো হয়েছে...');
+            if (configArea) configArea.style.display = 'none';
+        } else if (status === 'error') {
+            if (badge) { badge.style.background = '#fee2e2'; badge.style.color = '#b91c1c'; }
+            if (dot) dot.textContent = '🔴';
+            if (statusText) statusText.textContent = text;
+            if (headerIcon) headerIcon.textContent = '🔴';
+            if (headerText) headerText.textContent = 'সিঙ্ক এরর';
+            if (banner) banner.style.display = 'none';
+            if (configArea) configArea.style.display = 'block';
+        } else {
+            // Offline / Local
+            if (badge) { badge.style.background = '#f1f5f9'; badge.style.color = '#475569'; }
+            if (dot) dot.textContent = '⚪';
+            if (statusText) statusText.textContent = text;
+            if (headerIcon) headerIcon.textContent = '☁️';
+            if (headerText) headerText.textContent = 'ক্লাউড সিঙ্ক';
+            if (banner) banner.style.display = 'none';
+            if (configArea) configArea.style.display = 'block';
+        }
+    }
+
+    function handleFirebaseConfigSave() {
+        const inputEl = document.getElementById('firebaseConfigInput');
+        if (!inputEl) return;
+        const val = inputEl.value.trim();
+        if (!val) {
+            alert('অনুগ্রহ করে Firebase Realtime Database এর URL অথবা Config পেস্ট করুন।');
+            return;
+        }
+
+        let parsedConfig = null;
+        if (val.startsWith('{') && val.endsWith('}')) {
+            try {
+                parsedConfig = JSON.parse(val);
+            } catch(e) {
+                try {
+                    const cleaned = val
+                        .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":')
+                        .replace(/'/g, '"');
+                    parsedConfig = JSON.parse(cleaned);
+                } catch(err) {
+                    alert('Firebase Config ফরম্যাট সঠিক নয়! অনুগ্রহ করে সঠিক JSON অথবা শুধু Database URL দিন।');
+                    return;
+                }
+            }
+        } else if (val.startsWith('http://') || val.startsWith('https://')) {
+            let dbUrl = val;
+            if (!dbUrl.endsWith('/')) dbUrl += '/';
+            parsedConfig = { databaseURL: dbUrl };
+        } else {
+            alert('সঠিক Firebase URL দিন (যেমন: https://your-project-default-rtdb.firebaseio.com/)');
+            return;
+        }
+
+        if (!parsedConfig.apiKey) {
+            parsedConfig.apiKey = "AIzaSySCSPNilphamariDefaultKey";
+        }
+
+        localStorage.setItem(FIREBASE_CONFIG_STORAGE_KEY, JSON.stringify(parsedConfig));
+        showToast('Firebase কনফিগারেশন সেভ হয়েছে! কানেক্ট করা হচ্ছে...', '🔄');
+        initFirebase();
+    }
+
+    function pushLocalDataToFirebase() {
+        if (!firebaseDb) {
+            alert('Firebase ক্লাউড ডাটাবেজ এখনও কানেক্ট করা হয়নি!');
+            return;
+        }
+        if (!confirm('আপনি কি আপনার এই ডিভাইসের বর্তমান সকল তথ্য ক্লাউড ডাটাবেজে আপলোড করতে চান? এতে ক্লাউডের ডাটা এই ডিভাইসের ডাটা দিয়ে আপডেট হবে।')) {
+            return;
+        }
+        firebaseDb.ref('scsp_nilphamari/schools').set(schoolsData)
+            .then(() => {
+                const creds = getAuthCredentials();
+                firebaseDb.ref('scsp_nilphamari/auth').set(creds).catch(() => {});
+                showToast('বর্তমান সমস্ত ডাটা ক্লাউডে সফলভাবে আপলোড হয়েছে!', '☁️');
+            })
+            .catch(err => {
+                alert('ক্লাউডে আপলোড করতে ব্যর্থ হয়েছে: ' + err.message);
+            });
+    }
+
+    function disconnectFirebase() {
+        if (!confirm('আপনি কি ক্লাউড ডাটাবেজের সংযোগ বিচ্ছিন্ন করতে চান? এতে ডাটা শুধুমাত্র এই ডিভাইসে লোকাল থাকবে।')) {
+            return;
+        }
+        localStorage.removeItem(FIREBASE_CONFIG_STORAGE_KEY);
+        if (firebaseDb) {
+            try {
+                firebaseDb.goOffline();
+            } catch(e) {}
+        }
+        firebaseApp = null;
+        firebaseDb = null;
+        isFirebaseConnected = false;
+        updateCloudUIState('offline', 'লোকাল মোড (ক্লাউড কানেক্ট করা হয়নি)');
+        showToast('ক্লাউড ডাটাবেজ সংযোগ বিচ্ছিন্ন করা হয়েছে!', '🔌');
+    }
+
+    function toggleFirebaseHelp() {
+        const box = document.getElementById('firebaseHelpBox');
+        if (box) {
+            box.style.display = (box.style.display === 'none' || !box.style.display) ? 'block' : 'none';
+        }
+    }
+
+    function syncWithFirebase(isManual = false) {
+        if (!firebaseDb) {
+            if (isManual) alert('Firebase ক্লাউড ডাটাবেজ এখনও সংযুক্ত হয়নি!');
+            return;
+        }
+        updateCloudUIState('connecting', 'ক্লাউড থেকে ডাটা আনা হচ্ছে...');
+        firebaseDb.ref('scsp_nilphamari/schools').once('value')
+            .then(snap => {
+                const data = snap.val();
+                if (data && Array.isArray(data) && data.length > 0) {
+                    schoolsData = data;
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(schoolsData));
+                    saveToIndexedDB(schoolsData);
+                    renderApp();
+                    renderHomeOverview();
+                    renderReports();
+                    updateSettingCounters();
+                    updateCloudUIState('connected', '🟢 ক্লাউড সংযুক্ত (লাইভ সিঙ্ক চালু)', getActiveFirebaseConfig()?.databaseURL);
+                    if (isManual) showToast('ক্লাউড থেকে সর্বশেষ ডাটা রিফ্রেশ করা হয়েছে!', '🔄');
+                } else {
+                    if (isManual) alert('ক্লাউড ডাটাবেজে কোনো ডাটা পাওয়া যায়নি। আপনি "লোকাল ডাটা ক্লাউডে আপলোড" করতে পারেন।');
+                }
+            })
+            .catch(err => {
+                console.error('Firebase manual sync error:', err);
+                if (isManual) alert('ক্লাউড থেকে ডাটা আনতে সমস্যা হয়েছে: ' + err.message);
+            });
+    }
 
     // Application State
     let schoolsData = loadData();
@@ -4131,6 +4515,21 @@
             timeEl.textContent = d.toLocaleDateString('bn-BD') + ' ' + d.toLocaleTimeString('bn-BD');
         }
 
+        // SAVE TO GOOGLE FIREBASE CLOUD DATABASE
+        if (firebaseDb && isFirebaseConnected && !isSyncingFromCloud) {
+            try {
+                firebaseDb.ref('scsp_nilphamari/schools').set(schoolsData)
+                    .then(() => {
+                        console.log('Saved to Firebase Cloud Database successfully');
+                    })
+                    .catch((err) => {
+                        console.warn('Firebase save warning:', err);
+                    });
+            } catch(e) {
+                console.warn('Firebase set error:', e);
+            }
+        }
+
         try {
             if (window.location.protocol.startsWith('http')) {
                 fetch('/api/save-database', {
@@ -4142,7 +4541,7 @@
         } catch(e) {}
     }
 
-    function openDbModal() {
+    function openDbModal(targetTab = null) {
         let totalSt = 0;
         schoolsData.forEach(s => totalSt += (s.students ? s.students.length : 0));
         const scEl = document.getElementById('dbSchoolCount');
@@ -4159,7 +4558,22 @@
                 timeEl.textContent = 'মূল ডাটাবেজ সংযুক্ত';
             }
         }
+
+        // Populate Firebase URL if configured
+        const currentCfg = getActiveFirebaseConfig();
+        const fbInp = document.getElementById('firebaseConfigInput');
+        if (fbInp && currentCfg && currentCfg.databaseURL) {
+            fbInp.value = currentCfg.databaseURL;
+        }
+
         document.getElementById('dbManageModal').classList.add('active');
+
+        if (targetTab === 'cloud') {
+            setTimeout(() => {
+                const cCard = document.getElementById('cloudSyncCard');
+                if (cCard) cCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
     }
 
     function closeDbModal() {
@@ -5288,6 +5702,7 @@
 
         localStorage.removeItem(STORAGE_KEY);
         schoolsData = JSON.parse(JSON.stringify(MASTER_DATA));
+        saveData();
         closeStudentDetail();
         renderApp();
         showToast('সকল ডাটা সফলভাবে রিসেট করা হয়েছে!');
@@ -5809,6 +6224,10 @@
         localStorage.setItem(AUTH_USER_KEY, newId);
         localStorage.setItem(AUTH_PASS_KEY, newPass);
 
+        if (firebaseDb) {
+            firebaseDb.ref('scsp_nilphamari/auth').set({ user: newId, pass: newPass }).catch(() => {});
+        }
+
         const uEls = [document.getElementById('headerUserName'), document.getElementById('sidebarUserName'), document.getElementById('mobileUserName')];
         uEls.forEach(el => { if (el) el.textContent = newId; });
 
@@ -5825,6 +6244,7 @@
     renderHomeOverview();
     syncWithIndexedDB();
     checkAuth();
+    initFirebase();
 </script>
 
 </body>
