@@ -4421,7 +4421,11 @@
                 if (DEFAULT_FIREBASE_DB_URL && DEFAULT_FIREBASE_DB_URL.trim()) {
                     let u = DEFAULT_FIREBASE_DB_URL.trim();
                     if (!u.endsWith('/')) u += '/';
-                    return { databaseURL: u };
+                    return {
+                        databaseURL: u,
+                        projectId: "rscjal-930cd",
+                        apiKey: "AIzaSySCSPNilphamariDefaultKey"
+                    };
                 }
                 return null;
             }
@@ -4555,8 +4559,16 @@
                         }
                     });
 
-                    // Background heartbeat every 8 seconds to ensure mobile sync never goes to sleep
-                    setInterval(fastFetchFromCloud, 8000);
+                    // Background heartbeat every 5 seconds to ensure mobile sync never goes to sleep
+                    setInterval(fastFetchFromCloud, 5000);
+
+                    // Re-sync immediately when switching back to tab/browser (crucial for mobile phones)
+                    document.addEventListener('visibilitychange', () => {
+                        if (!document.hidden) fastFetchFromCloud();
+                    });
+                    window.addEventListener('focus', () => {
+                        fastFetchFromCloud();
+                    });
 
                 } catch (err) {
                     console.error('Firebase initialization error:', err);
@@ -4814,8 +4826,10 @@
                                     localStorage.setItem(STORAGE_KEY, JSON.stringify(schoolsData));
                                     localStorage.setItem('scsp_last_saved', idbTime);
                                 } catch (e) { }
-                                renderAllSchools();
-                                updateKpiValues();
+                                renderApp();
+                                renderHomeOverview();
+                                renderReports();
+                                updateSettingCounters();
                                 if (activeKpiMode === 'villages') renderVillageTags();
                             }
                         } else {
@@ -4850,6 +4864,7 @@
                         firebaseDb.ref('scsp_nilphamari/schools').set(schoolsData)
                             .then(() => {
                                 console.log('Saved to Firebase Cloud via SDK');
+                                showToast('☁️ ক্লাউডে তথ্য সংরক্ষিত ও সিঙ্ক হয়েছে!', '✅');
                             })
                             .catch((err) => {
                                 console.warn('Firebase save warning:', err);
@@ -4980,8 +4995,10 @@
                         if (confirm(`আপনি কি "${file.name}" ফাইলটি থেকে ডাটা রিস্টোর করতে চান? এতে বর্তমান তথ্য আপডেট হয়ে যাবে।`)) {
                             schoolsData = importedSchools;
                             saveData();
-                            renderAllSchools();
-                            updateKpiValues();
+                            renderApp();
+                            renderHomeOverview();
+                            renderReports();
+                            updateSettingCounters();
                             if (activeKpiMode === 'villages') renderVillageTags();
                             closeDbModal();
                             showToast(`ডাটাবেজ ফাইল সফলভাবে রিস্টোর হয়েছে! মোট ${importedSchools.length}টি প্রতিষ্ঠান লোড হয়েছে।`, '✅');
@@ -5794,6 +5811,10 @@
                     });
                 });
                 return `NP-${String(maxNum + 1).padStart(5, '0')}`;
+            }
+
+            function openAddStudentModal() {
+                openAddModal();
             }
 
             function openAddModal(defaultSchoolNum = 1) {
