@@ -1,0 +1,18 @@
+# Render Blueprint Specification
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: school-wise-students
+    env: static
+    buildCommand: ""
+    staticPublishPath: "."
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"

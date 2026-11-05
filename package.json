@@ -1,0 +1,23 @@
+{
+  "name": "school-wise-students",
+  "version": "1.0.0",
+  "description": "School Wise Student Management System - Sun Child Sponsorship Program (SCSP Nilphamari)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node -e \"console.log('Build OK')\""
+  },
+  "keywords": [
+    "education",
+    "students",
+    "schools",
+    "scsp",
+    "nilphamari",
+    "render"
+  ],
+  "author": "SCSP",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
