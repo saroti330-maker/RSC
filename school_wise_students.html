@@ -2755,17 +2755,6 @@
         </div>
     </div>
 
-    <!-- PENDING CLOUD UPDATE BANNER (ব্যবহারকারী রিফ্রেশ করলে দৃশ্যমান হবে) -->
-    <div id="pendingUpdateBanner" style="display:none; position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:99999; background:linear-gradient(135deg, #1e293b, #0f172a); color:#ffffff; padding:10px 20px; border-radius:30px; box-shadow:0 10px 25px rgba(0,0,0,0.3); font-size:13.5px; font-weight:600; align-items:center; gap:12px; border:1px solid #38bdf8;">
-        <span style="display:inline-flex; align-items:center; gap:6px;">
-            <span style="font-size:16px;">🔄</span> নতুন তথ্য এসেছে। পেজটি রিফ্রেশ করুন।
-        </span>
-        <button type="button" onclick="window.location.reload()" style="background:#2563eb; color:#ffffff; border:none; padding:6px 14px; border-radius:20px; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(37,99,235,0.4);">
-            <span>রিফ্রেশ করুন ↻</span>
-        </button>
-        <button type="button" onclick="document.getElementById('pendingUpdateBanner').style.display='none'" style="background:transparent; border:none; color:#94a3b8; font-size:18px; cursor:pointer; line-height:1; padding:0 4px;" title="বন্ধ করুন">✕</button>
-    </div>
-
     <!-- MAIN APP CONTENT (Only visible after login) -->
     <div id="mainAppContent" style="display:none;">
         <div class="app-layout">
@@ -4341,18 +4330,6 @@
             }
 
             let isAppInitialized = false;
-            let hasPendingCloudUpdate = false;
-
-            function showPendingUpdateNotification() {
-                if (hasPendingCloudUpdate) return;
-                hasPendingCloudUpdate = true;
-                const banner = document.getElementById('pendingUpdateBanner');
-                if (banner) banner.style.display = 'flex';
-                const headerIcon = document.getElementById('headerCloudIcon');
-                const headerText = document.getElementById('headerCloudText');
-                if (headerIcon) headerIcon.textContent = '🔔';
-                if (headerText) headerText.textContent = 'আপডেট জমা আছে (রিফ্রেশ)';
-            }
 
             function parseRawSchoolsData(raw) {
                 if (!raw) return null;
@@ -4395,9 +4372,8 @@
                                 if (activeKpiMode === 'villages') renderVillageTags();
                                 setTimeout(() => { isSyncingFromCloud = false; }, 300);
                             } else {
-                                // পেজ ইতিমধ্যে চালু অবস্থায় রয়েছে: অটোমেটিক স্ক্রিন পরিবর্তন হবে না, রিফ্রেশ করার নোটিফিকেশন দেখাবে
-                                console.log('Background cloud update saved to database. Waiting for page refresh.');
-                                showPendingUpdateNotification();
+                                // পেজ ইতিমধ্যে চালু অবস্থায় রয়েছে: কোনো নোটিফিকেশন বা ব্যানার দেখাবে না, নিঃশব্দে ডাটাবেজে জমা থাকবে
+                                console.log('Background cloud update saved to database silently.');
                             }
                         }
                     }
@@ -4471,9 +4447,8 @@
                                     if (activeKpiMode === 'villages') renderVillageTags();
                                     setTimeout(() => { isSyncingFromCloud = false; }, 300);
                                 } else {
-                                    // পেজ ইতিমধ্যে চালু রয়েছে: কোন অটোমেটিক রেন্ডার হবে না, ডাটা ডাটাবেজে সংরক্ষণ থাকবে
-                                    console.log('Realtime sync saved to database. Visible when user refreshes.');
-                                    showPendingUpdateNotification();
+                                    // পেজ ইতিমধ্যে চালু রয়েছে: কোনো ব্যানার বা নোটিফিকেশন দেখাবে না, নিঃশব্দে ডাটাবেজে জমা থাকবে
+                                    console.log('Realtime sync saved to database silently.');
                                 }
                             }
                         } else {
