@@ -1684,10 +1684,293 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ==========================================
+           AUTHENTICATION & LOGIN STYLES
+           ========================================== */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            overflow-y: auto;
+        }
+
+        .login-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+            width: 100%;
+            max-width: 440px;
+            padding: 34px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .login-icon {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .login-header h2 {
+            font-size: 21px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .login-header p {
+            font-size: 13px;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        .login-field {
+            margin-bottom: 18px;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 9px;
+            font-size: 14px;
+            color: #0f172a;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .pwd-toggle-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--gray-500);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+            font-size: 13px;
+        }
+
+        .remember-me-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--gray-600);
+            user-select: none;
+        }
+
+        .remember-me-label input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .login-submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(30, 64, 175, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .login-submit-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .login-hint-box {
+            margin-top: 22px;
+            background: #f1f5f9;
+            border: 1px dashed var(--gray-300);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            color: var(--gray-700);
+            text-align: center;
+        }
+
+        .auth-code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+
+        .login-alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* User bar in header */
+        .user-auth-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--gray-300);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            margin-left: auto;
+        }
+
+        .user-auth-pill {
+            font-size: 12px;
+            color: #1e3a8a;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding-right: 6px;
+            border-right: 1px solid var(--gray-300);
+        }
+
+        .btn-auth-action {
+            background: transparent;
+            border: none;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 6px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-auth-action:hover {
+            background: #e2e8f0;
+            color: var(--primary);
+        }
+
+        .btn-auth-action.btn-logout:hover {
+            background: #fee2e2;
+            color: var(--danger);
+        }
     </style>
 </head>
 <body>
 
+<!-- LOGIN SCREEN (ইউজার আইডি ও পাসওয়ার্ড প্রবেশদ্বার) -->
+<div id="loginScreen" class="login-wrapper">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-icon">🔐</div>
+            <h2>SCSP শিক্ষার্থী ডাটাবেজ</h2>
+            <p>বিদ্যালয়ভিত্তিক তথ্যাবলী দেখতে ও পরিচালনা করতে ইউজার আইডি ও পাসওয়ার্ড দিয়ে প্রবেশ করুন।</p>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+            <div id="loginErrorMsg" class="login-alert-danger" style="display:none;">
+                <span>⚠️</span> <span id="loginErrorText">ভুল ইউজার আইডি বা পাসওয়ার্ড! আবার চেষ্টা করুন।</span>
+            </div>
+
+            <div class="login-field">
+                <label for="loginUserId">👤 ইউজার আইডি (User ID)</label>
+                <input type="text" id="loginUserId" class="login-input" placeholder="User ID লিখুন (উদা: admin)" required autofocus autocomplete="username">
+            </div>
+
+            <div class="login-field">
+                <label for="loginPassword">🔑 পাসওয়ার্ড (Password)</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="loginPassword" class="login-input" placeholder="পাসওয়ার্ড লিখুন" required autocomplete="current-password">
+                    <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('loginPassword', 'pwdToggleIcon')" title="পাসওয়ার্ড দেখুন/লুকান">
+                        <span id="pwdToggleIcon">👁️</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="login-options">
+                <label class="remember-me-label">
+                    <input type="checkbox" id="rememberMeCheck" checked>
+                    <span>আমাকে মনে রাখুন (Remember Me)</span>
+                </label>
+            </div>
+
+            <button type="submit" class="login-submit-btn">
+                <span>🔐</span> <span>প্রবেশ করুন (Login)</span>
+            </button>
+        </form>
+
+        <div class="login-hint-box">
+            <div style="font-weight: 700; margin-bottom: 3px;">💡 ডিফল্ট লগইন তথ্য:</div>
+            <div>ইউজার আইডি: <code class="auth-code">admin</code> | পাসওয়ার্ড: <code class="auth-code">123456</code></div>
+            <div style="font-size: 11px; color: var(--gray-500); margin-top: 4px;">(লগইন করার পর যেকোনো সময় পাসওয়ার্ড পরিবর্তন করতে পারবেন)</div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP CONTENT (Only visible after login) -->
+<div id="mainAppContent" style="display:none;">
 <div class="container">
     <!-- Header Banner -->
     <header class="header-card">
@@ -1708,6 +1991,18 @@
                 <div class="header-meta-item">
                     <span>🏢</span>
                     <span>Rights & Sight for Children (RSC)</span>
+                </div>
+                <!-- Logged In User Status Bar -->
+                <div class="user-auth-bar">
+                    <span class="user-auth-pill">
+                        <span>👤</span> <strong id="headerUserName">admin</strong>
+                    </span>
+                    <button type="button" class="btn-auth-action" onclick="openChangePasswordModal()" title="পাসওয়ার্ড পরিবর্তন করুন">
+                        <span>🔑</span> <span>পাসওয়ার্ড পরিবর্তন</span>
+                    </button>
+                    <button type="button" class="btn-auth-action btn-logout" onclick="handleLogout()" title="লগআউট করুন">
+                        <span>🚪</span> <span>লগআউট</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -2336,11 +2631,57 @@
     </div>
 </div>
 
+<!-- Modal: Change User ID & Password -->
+<div id="changePasswordModal" class="modal-overlay" onclick="closeChangePasswordModalOnOutside(event)">
+    <div class="modal-content" style="max-width: 480px;" onclick="event.stopPropagation()">
+        <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white;">
+            <h3>
+                <span>🔑</span> <span>ইউজার আইডি ও পাসওয়ার্ড পরিবর্তন</span>
+            </h3>
+            <button type="button" class="modal-close" style="color:white;" onclick="closeChangePasswordModal()">&times;</button>
+        </div>
+        <form id="changePasswordForm" onsubmit="handleChangePasswordSubmit(event)">
+            <div class="modal-body" style="padding: 22px;">
+                <div id="changePwdError" class="login-alert-danger" style="display:none; margin-bottom: 14px;">
+                    <span>⚠️</span> <span id="changePwdErrorText"></span>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" for="currentPasswordInput">বর্তমান পাসওয়ার্ড (Current Password) *</label>
+                    <input type="password" id="currentPasswordInput" class="form-input" required placeholder="বর্তমান পাসওয়ার্ড লিখুন">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" for="newUserIdInput">নতুন ইউজার আইডি (New User ID) *</label>
+                    <input type="text" id="newUserIdInput" class="form-input" required placeholder="নতুন User ID লিখুন">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" for="newPasswordInput">নতুন পাসওয়ার্ড (New Password) *</label>
+                    <input type="password" id="newPasswordInput" class="form-input" required placeholder="কমপক্ষে ৪ অক্ষরের নতুন পাসওয়ার্ড" minlength="4">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 8px;">
+                    <label class="form-label" for="confirmPasswordInput">নতুন পাসওয়ার্ড নিশ্চিত করুন *</label>
+                    <input type="password" id="confirmPasswordInput" class="form-input" required placeholder="পুনরায় নতুন পাসওয়ার্ড লিখুন">
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 14px 22px; background: #f8fafc; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-outline" onclick="closeChangePasswordModal()">বাতিল</button>
+                <button type="submit" class="btn btn-primary">
+                    <span>💾</span> <span>সংরক্ষণ করুন</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Toast notification element -->
 <div id="toastNotify" class="toast-notify">
     <span id="toastIcon">✅</span>
     <span id="toastMessage">সফলভাবে সম্পন্ন হয়েছে!</span>
 </div>
+</div><!-- /mainAppContent -->
 
 <!-- Embedded Master JSON Data -->
 <script id="studentsMasterJson" type="application/json">
@@ -2352,6 +2693,170 @@
 </script>
 
 <script>
+    // ==========================================
+    // AUTHENTICATION & LOGIN MANAGEMENT
+    // ==========================================
+    const AUTH_USER_KEY = 'scsp_auth_user';
+    const AUTH_PASS_KEY = 'scsp_auth_pass';
+    const AUTH_SESSION_KEY = 'scsp_auth_session';
+
+    const DEFAULT_USER_ID = 'admin';
+    const DEFAULT_PASSWORD = '123456';
+
+    function getAuthCredentials() {
+        const user = localStorage.getItem(AUTH_USER_KEY) || DEFAULT_USER_ID;
+        const pass = localStorage.getItem(AUTH_PASS_KEY) || DEFAULT_PASSWORD;
+        return { user, pass };
+    }
+
+    function checkAuth() {
+        const session = localStorage.getItem(AUTH_SESSION_KEY) || sessionStorage.getItem(AUTH_SESSION_KEY);
+        const loginScreen = document.getElementById('loginScreen');
+        const mainContent = document.getElementById('mainAppContent');
+        const userEl = document.getElementById('headerUserName');
+
+        if (session === 'logged_in') {
+            const creds = getAuthCredentials();
+            if (userEl) userEl.textContent = creds.user;
+            if (loginScreen) loginScreen.style.display = 'none';
+            if (mainContent) mainContent.style.display = 'block';
+            return true;
+        } else {
+            if (loginScreen) loginScreen.style.display = 'flex';
+            if (mainContent) mainContent.style.display = 'none';
+            return false;
+        }
+    }
+
+    function handleLoginSubmit(e) {
+        e.preventDefault();
+        const inputUser = document.getElementById('loginUserId').value.trim();
+        const inputPass = document.getElementById('loginPassword').value;
+        const rememberMe = document.getElementById('rememberMeCheck').checked;
+        const errorEl = document.getElementById('loginErrorMsg');
+        const errorText = document.getElementById('loginErrorText');
+
+        const creds = getAuthCredentials();
+
+        if (inputUser === creds.user && inputPass === creds.pass) {
+            if (errorEl) errorEl.style.display = 'none';
+            if (rememberMe) {
+                localStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
+            } else {
+                sessionStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
+            }
+
+            const userEl = document.getElementById('headerUserName');
+            if (userEl) userEl.textContent = creds.user;
+
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainAppContent').style.display = 'block';
+
+            showToast('সফলভাবে লগইন হয়েছে! স্বাগতম।', '🔓');
+        } else {
+            if (errorEl) {
+                errorEl.style.display = 'flex';
+                if (inputUser !== creds.user) {
+                    errorText.textContent = 'ভুল ইউজার আইডি! অনুগ্রহ করে সঠিক ইউজার আইডি দিন।';
+                } else {
+                    errorText.textContent = 'ভুল পাসওয়ার্ড! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন।';
+                }
+            }
+        }
+    }
+
+    function handleLogout() {
+        if (confirm('আপনি কি নিশ্চিত যে লগআউট করতে চান?')) {
+            localStorage.removeItem(AUTH_SESSION_KEY);
+            sessionStorage.removeItem(AUTH_SESSION_KEY);
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainAppContent').style.display = 'none';
+            document.getElementById('loginPassword').value = '';
+            const errorEl = document.getElementById('loginErrorMsg');
+            if (errorEl) errorEl.style.display = 'none';
+            showToast('লগআউট সফল হয়েছে।', '🔒');
+        }
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁️';
+        }
+    }
+
+    function openChangePasswordModal() {
+        const creds = getAuthCredentials();
+        document.getElementById('newUserIdInput').value = creds.user;
+        document.getElementById('currentPasswordInput').value = '';
+        document.getElementById('newPasswordInput').value = '';
+        document.getElementById('confirmPasswordInput').value = '';
+        const err = document.getElementById('changePwdError');
+        if (err) err.style.display = 'none';
+        document.getElementById('changePasswordModal').classList.add('active');
+    }
+
+    function closeChangePasswordModal() {
+        document.getElementById('changePasswordModal').classList.remove('active');
+    }
+
+    function closeChangePasswordModalOnOutside(e) {
+        if (e.target.id === 'changePasswordModal') {
+            closeChangePasswordModal();
+        }
+    }
+
+    function handleChangePasswordSubmit(e) {
+        e.preventDefault();
+        const currentPass = document.getElementById('currentPasswordInput').value;
+        const newId = document.getElementById('newUserIdInput').value.trim();
+        const newPass = document.getElementById('newPasswordInput').value;
+        const confirmPass = document.getElementById('confirmPasswordInput').value;
+        const err = document.getElementById('changePwdError');
+        const errText = document.getElementById('changePwdErrorText');
+
+        const creds = getAuthCredentials();
+
+        if (currentPass !== creds.pass) {
+            err.style.display = 'flex';
+            errText.textContent = 'বর্তমান পাসওয়ার্ডটি সঠিক নয়!';
+            return;
+        }
+
+        if (!newId) {
+            err.style.display = 'flex';
+            errText.textContent = 'ইউজার আইডি খালি রাখা যাবে না!';
+            return;
+        }
+
+        if (newPass.length < 4) {
+            err.style.display = 'flex';
+            errText.textContent = 'নতুন পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে!';
+            return;
+        }
+
+        if (newPass !== confirmPass) {
+            err.style.display = 'flex';
+            errText.textContent = 'নতুন পাসওয়ার্ড এবং নিশ্চিতকরণ পাসওয়ার্ড মেলেনি!';
+            return;
+        }
+
+        // Save new credentials
+        localStorage.setItem(AUTH_USER_KEY, newId);
+        localStorage.setItem(AUTH_PASS_KEY, newPass);
+
+        const userEl = document.getElementById('headerUserName');
+        if (userEl) userEl.textContent = newId;
+
+        closeChangePasswordModal();
+        showToast('ইউজার আইডি ও পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে!', '🔑');
+    }
+
     // Master static data
     const MASTER_DATA = JSON.parse(document.getElementById('studentsMasterJson').textContent);
     const SCHOOL_OPTIONS = JSON.parse(document.getElementById('schoolOptionsJson').textContent);
@@ -3795,6 +4300,7 @@
     // Initialize Application
     renderApp();
     syncWithIndexedDB();
+    checkAuth();
 </script>
 
 </body>
