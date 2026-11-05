@@ -2150,12 +2150,19 @@
         .nav-icon {
             font-size: 18px;
             width: 24px;
-            text-align: center;
-            display: inline-block;
+            min-width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .nav-text {
             flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .nav-badge {
