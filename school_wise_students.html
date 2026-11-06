@@ -1551,12 +1551,62 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        #studentDataForm {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
         .modal-form-body {
             padding: 24px;
-            overflow-y: auto;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            flex: 1;
+            min-height: 0;
+            max-height: calc(90vh - 130px);
             display: flex;
             flex-direction: column;
             gap: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #2563eb #e2e8f0;
+        }
+
+        /* Modern visible scrollbar for form modals */
+        .modal-form-body::-webkit-scrollbar {
+            width: 10px;
+            display: block !important;
+        }
+        .modal-form-body::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 6px;
+        }
+        .modal-form-body::-webkit-scrollbar-thumb {
+            background: #2563eb;
+            border-radius: 6px;
+            border: 2px solid #f1f5f9;
+        }
+        .modal-form-body::-webkit-scrollbar-thumb:hover {
+            background: #1d4ed8;
+        }
+
+        #studentFormModal .modal-content {
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #studentFormModal .modal-footer {
+            flex-shrink: 0;
         }
 
         .form-section-title {
@@ -2873,6 +2923,16 @@
                                 <span>🏢 RSC</span>
                                 <span>💾 ক্লাউড ডাটাবেজ</span>
                             </div>
+
+                            <!-- Quick Action Buttons on Home Hero -->
+                            <div class="home-hero-actions" style="margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                                <button type="button" class="btn btn-success" onclick="openAddStudentModal()" style="font-weight: 700; font-size: 14.5px; padding: 11px 22px; border-radius: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; background: #10b981; color: #ffffff;">
+                                    <span style="font-size: 18px;">➕</span> <span>নতুন শিক্ষার্থী যুক্ত করুন</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="switchMainView('students')" style="font-weight: 600; font-size: 13.5px; padding: 11px 20px; border-radius: 8px; background: rgba(255,255,255,0.18); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span>🎓</span> <span>শিক্ষার্থী তালিকা</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- 4 Quick-Action Feature Cards -->
@@ -2915,8 +2975,11 @@
                         </div>
 
                         <!-- KPI Metrics Summary on Home -->
-                        <div class="home-section-header">
-                            <h2>📈 মূল পরিসংখ্যান</h2>
+                        <div class="home-section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+                            <h2 style="margin: 0;">📈 মূল পরিসংখ্যান</h2>
+                            <button type="button" class="btn btn-success" onclick="openAddStudentModal()" style="font-weight: 700; font-size: 13.5px; padding: 8px 18px; border-radius: 8px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; background: #10b981; color: #ffffff;">
+                                <span>➕</span> <span>নতুন শিক্ষার্থী যুক্ত করুন</span>
+                            </button>
                         </div>
                         <div class="kpi-grid">
                             <div class="kpi-card" onclick="showCategoryInStudents('schools')">
