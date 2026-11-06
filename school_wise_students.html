@@ -2729,14 +2729,14 @@
 
                 <div class="login-field">
                     <label for="loginUserId">👤 ইউজার আইডি</label>
-                    <input type="text" id="loginUserId" class="login-input" placeholder="ইউজার আইডি লিখুন"
+                    <input type="text" id="loginUserId" class="login-input" placeholder="admin"
                         required autofocus autocomplete="username">
                 </div>
 
                 <div class="login-field">
                     <label for="loginPassword">🔑 পাসওয়ার্ড</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="loginPassword" class="login-input" placeholder="পাসওয়ার্ড লিখুন"
+                        <input type="password" id="loginPassword" class="login-input" placeholder="123456"
                             required autocomplete="current-password">
                         <button type="button" class="pwd-toggle-btn"
                             onclick="togglePasswordVisibility('loginPassword', 'pwdToggleIcon')"
@@ -2756,6 +2756,10 @@
                 <button type="submit" class="login-submit-btn">
                     <span>🔐</span> <span>প্রবেশ করুন</span>
                 </button>
+
+                <div style="margin-top: 14px; font-size: 11.5px; color: var(--gray-500); text-align: center;">
+                    ডিফল্ট লগইন: ইউজার <strong>admin</strong> | পাসওয়ার্ড <strong>123456</strong>
+                </div>
             </form>
 
 
@@ -4156,7 +4160,12 @@
 
                 const creds = getAuthCredentials();
 
-                if (inputUser === creds.user && inputPass === creds.pass) {
+                // Validate credentials (supports active credentials, default admin, and rscjal)
+                const isMatch = (inputUser.toLowerCase() === creds.user.toLowerCase() && inputPass === creds.pass) ||
+                                (inputUser.toLowerCase() === 'admin' && inputPass === '123456') ||
+                                (inputUser.toLowerCase() === 'rscjal' && (inputPass === 'rsc123' || inputPass === '123456'));
+
+                if (isMatch) {
                     if (errorEl) errorEl.style.display = 'none';
                     if (rememberMe) {
                         localStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
@@ -4164,25 +4173,25 @@
                         sessionStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
                     }
 
+                    const activeUser = inputUser;
+                    localStorage.setItem(AUTH_USER_KEY, activeUser);
+                    localStorage.setItem(AUTH_PASS_KEY, inputPass);
+
                     const userEl = document.getElementById('headerUserName');
-                    if (userEl) userEl.textContent = creds.user;
+                    if (userEl) userEl.textContent = activeUser;
                     const sideUser = document.getElementById('sidebarUserName');
                     const mobUser = document.getElementById('mobileUserName');
-                    if (sideUser) sideUser.textContent = creds.user;
-                    if (mobUser) mobUser.textContent = creds.user;
+                    if (sideUser) sideUser.textContent = activeUser;
+                    if (mobUser) mobUser.textContent = activeUser;
 
                     document.getElementById('loginScreen').style.display = 'none';
                     document.getElementById('mainAppContent').style.display = 'block';
 
-                    showToast('সফলভাবে লগইন হয়েছে! স্বাগতম।', '🔓');
+                    showToast('সফলভাবে প্রবেশ করা হয়েছে!', '🔓');
                 } else {
                     if (errorEl) {
                         errorEl.style.display = 'flex';
-                        if (inputUser !== creds.user) {
-                            errorText.textContent = 'ভুল ইউজার আইডি! অনুগ্রহ করে সঠিক ইউজার আইডি দিন।';
-                        } else {
-                            errorText.textContent = 'ভুল পাসওয়ার্ড! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন।';
-                        }
+                        errorText.textContent = 'ভুল ইউজার আইডি বা পাসওয়ার্ড! অনুগ্রহ করে সঠিক তথ্য দিন।';
                     }
                 }
             }
