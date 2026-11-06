@@ -4115,7 +4115,7 @@
                                                 <th>শিক্ষার্থীর নাম</th>
                                                 <th>গ্রাম / এলাকা</th>
                                                 <th>শিক্ষা প্রতিষ্ঠান</th>
-                                                <th style="text-align:center;">শ্রেণি ও রোল</th>
+                                                <th style="text-align:center; min-width:65px;">শ্রেণি</th>
                                                 <th>অভিভাবক ও মোবাইল</th>
                                                 <th style="text-align:center;">লিঙ্গ</th>
                                                 <th style="text-align:right;">মাসিক আয়</th>
@@ -7291,7 +7291,7 @@
                                 <th style="width:75px;">আইডি</th>
                                 <th>শিক্ষার্থীর নাম</th>
                                 <th style="text-align:center; width:45px;">লিঙ্গ</th>
-                                <th style="width:80px;">শ্রেণি ও রোল</th>
+                                <th style="width:65px; text-align:center;">শ্রেণি</th>
                                 ${currentPrintType !== 'school' ? '<th>শিক্ষা প্রতিষ্ঠান</th>' : ''}
                                 <th>অভিভাবকের নাম</th>
                                 <th>গ্রাম / এলাকা</th>
@@ -7317,7 +7317,7 @@
                                     <td style="text-align:center; font-weight:600; color:${st.gender === 'M' ? '#1d4ed8' : '#be185d'};">
                                         ${st.gender === 'M' ? 'ছাত্র' : 'ছাত্রী'}
                                     </td>
-                                    <td>${st.class_name ? 'শ্রেণি ' + st.class_name : 'N/A'}${st.sl ? ' (' + st.sl + ')' : ''}</td>
+                                    <td style="text-align:center; font-weight:600;">${formatClassName(st.class_name)}</td>
                                     ${currentPrintType !== 'school' ? `<td style="font-size:9.5px;">${st.school_name_bn || ''}</td>` : ''}
                                     <td style="font-size:9.5px;">${st.father_name || st.mother_name || 'অভিভাবক'}</td>
                                     <td>${st.village || 'N/A'}</td>
@@ -7518,7 +7518,7 @@
                                 <span class="village-badge-cell">🏡 ${st.village || 'N/A'}</span>
                             </td>
                             <td style="font-size:12px;">${st.school_name_bn || ''}</td>
-                            <td style="text-align:center; font-weight:600;">${st.class_name ? 'শ্রেণি ' + st.class_name : 'N/A'}${st.sl ? ' (রোল ' + st.sl + ')' : ''}</td>
+                            <td style="text-align:center; font-weight:600;"><span class="class-pill">${formatClassName(st.class_name)}</span></td>
                             <td style="font-size:12px;">
                                 <div>${st.father_name || st.mother_name || 'অভিভাবক'}</div>
                                 <div style="font-size:11px; color:#64748b;">${st.mobile || 'N/A'}</div>
@@ -7644,7 +7644,7 @@
                                 <th>শিক্ষার্থীর নাম</th>
                                 <th style="width:110px;">গ্রাম / এলাকা</th>
                                 <th>শিক্ষা প্রতিষ্ঠান</th>
-                                <th style="width:75px;">শ্রেণি ও রোল</th>
+                                <th style="width:65px; text-align:center;">শ্রেণি</th>
                                 <th>অভিভাবকের নাম</th>
                                 <th style="width:85px;">মোবাইল</th>
                                 <th style="text-align:center; width:40px;">লিঙ্গ</th>
@@ -7670,7 +7670,7 @@
                                         <strong style="color:#065f46;">🏡 ${st.village || 'N/A'}</strong>
                                     </td>
                                     <td style="font-size:9.5px;">${st.school_name_bn || ''}</td>
-                                    <td>${st.class_name ? 'শ্রেণি ' + st.class_name : 'N/A'}${st.sl ? ' (' + st.sl + ')' : ''}</td>
+                                    <td style="text-align:center; font-weight:600;">${formatClassName(st.class_name)}</td>
                                     <td style="font-size:9.5px;">${st.father_name || st.mother_name || 'অভিভাবক'}</td>
                                     <td style="font-size:9.5px;">${st.mobile || 'N/A'}</td>
                                     <td style="text-align:center; font-weight:600; color:${st.gender === 'M' ? '#1d4ed8' : '#be185d'};">
