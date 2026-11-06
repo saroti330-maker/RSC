@@ -5225,7 +5225,7 @@
                             if (!isAppInitialized) {
                                 // পেজ ওপেন/রিফ্রেশ হওয়ার প্রথম মুহুর্তে একবার ফ্রেশ ডাটা স্ক্রিনে লোড হবে
                                 isSyncingFromCloud = true;
-                                schoolsData = cloudData;
+                                schoolsData = normalizeAllStudents(cloudData);
                                 renderApp();
                                 renderHomeOverview();
                                 renderReports();
@@ -5300,7 +5300,7 @@
                                 if (!isAppInitialized) {
                                     // শুধুমাত্র পেজ রিলোড / রিফ্রেশ হওয়ার মুহূর্তে সর্বশেষ ডাটা স্ক্রিনে লোড হবে
                                     isSyncingFromCloud = true;
-                                    schoolsData = cloudData;
+                                    schoolsData = normalizeAllStudents(cloudData);
                                     renderApp();
                                     renderHomeOverview();
                                     renderReports();
@@ -5599,7 +5599,7 @@
                             const storedTime = localStorage.getItem('scsp_last_saved');
                             const idbTime = req.result.timestamp;
                             if (!storedTime || (idbTime && new Date(idbTime) > new Date(storedTime))) {
-                                schoolsData = req.result.data;
+                                schoolsData = normalizeAllStudents(req.result.data);
                                 try {
                                     localStorage.setItem(STORAGE_KEY, JSON.stringify(schoolsData));
                                     localStorage.setItem('scsp_last_saved', idbTime);
