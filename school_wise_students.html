@@ -3293,6 +3293,19 @@
 
     <!-- MAIN APP CONTENT (Only visible after login) -->
     <div id="mainAppContent" style="display:none;">
+    <script id="earlyAuthScript">
+      (function(){
+        try {
+          var s = localStorage.getItem("scsp_auth_session") || sessionStorage.getItem("scsp_auth_session");
+          if (s === "logged_in") {
+            var ls = document.getElementById("loginScreen");
+            var mc = document.getElementById("mainAppContent");
+            if (ls) ls.style.display = "none";
+            if (mc) mc.style.display = "block";
+          }
+        } catch(e){}
+      })();
+    </script>
         <div class="app-layout">
             <!-- LEFT SIDEBAR -->
             <aside class="app-sidebar" id="appSidebar">
@@ -5012,11 +5025,8 @@
 
                 if (isMatch) {
                     if (errorEl) errorEl.style.display = 'none';
-                    if (rememberMe) {
-                        localStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
-                    } else {
-                        sessionStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
-                    }
+                    localStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
+                    sessionStorage.setItem(AUTH_SESSION_KEY, 'logged_in');
 
                     const activeUser = inputUser;
                     localStorage.setItem(AUTH_USER_KEY, activeUser);
@@ -5141,6 +5151,83 @@
             const MASTER_DATA = JSON.parse(document.getElementById('studentsMasterJson').textContent);
             const SCHOOL_OPTIONS = JSON.parse(document.getElementById('schoolOptionsJson').textContent);
             const STORAGE_KEY = 'scsp_nilphamari_students_v3';
+
+            // Class & Gender Normalization Helpers (Declared before loadData to avoid TDZ)
+            function formatClassName(className) {
+                if (!className) return 'N/A';
+                const c = String(className).trim();
+                const map = {
+                    '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four',
+                    '5': 'Five', '6': 'Six', '7': 'Seven', '8': 'Eight',
+                    '9': 'Nine', '10': 'Ten', '11': 'Eleven', '12': 'Twelve',
+                    'class 1': 'One', 'class 2': 'Two', 'class 3': 'Three',
+                    'class 4': 'Four', 'class 5': 'Five', 'class 6': 'Six',
+                    'class 7': 'Seven', 'class 8': 'Eight', 'class 9': 'Nine',
+                    'class 10': 'Ten', 'class 11': 'Eleven', 'class 12': 'Twelve',
+                    'one': 'One', 'two': 'Two', 'three': 'Three', 'four': 'Four',
+                    'five': 'Five', 'six': 'Six', 'seven': 'Seven', 'eight': 'Eight',
+                    'nine': 'Nine', 'ten': 'Ten', 'eleven': 'Eleven', 'twelve': 'Twelve',
+                    'play': 'Play', 'nursery': 'Nursery', 'kg': 'KG', 'k.g': 'KG', 'alim': 'Alim'
+                };
+                const lower = c.toLowerCase();
+                if (map[lower]) return map[lower];
+                if (lower.startsWith('class ')) {
+                    const rest = lower.replace('class ', '').trim();
+                    if (map[rest]) return map[rest];
+                }
+                return c;
+            }
+
+            function formatGenderFull(gender) {
+                if (!gender) return 'N/A';
+                const g = String(gender).trim().toUpperCase();
+                if (g === 'M' || g === 'MALE' || g === 'BOY' || g === 'ছাত্র') return '👦 ছাত্র (Male)';
+                if (g === 'F' || g === 'FEMALE' || g === 'GIRL' || g === 'ছাত্রী') return '👧 ছাত্রী (Female)';
+                return gender;
+            }
+
+            const STANDARD_CLASS_ORDER = [
+                'Play', 'Nursery', 'KG', 'One', 'Two', 'Three', 'Four', 'Five',
+                'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Alim'
+            ];
+
+            function sortClassNames(classList) {
+                if (!Array.isArray(classList)) return [];
+                return Array.from(new Set(classList.map(c => formatClassName(c)).filter(Boolean))).sort((a, b) => {
+                    const idxA = STANDARD_CLASS_ORDER.indexOf(a);
+                    const idxB = STANDARD_CLASS_ORDER.indexOf(b);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.localeCompare(b, 'bn');
+                });
+            }
+
+            function normalizeStudentClass(st) {
+                if (!st) return;
+                if (st.class_name) {
+                    st.class_name = formatClassName(st.class_name);
+                }
+            }
+
+            function normalizeAllStudents(data) {
+                if (!Array.isArray(data)) return data;
+                data.forEach(s => {
+                    s.students = s.students || [];
+                    s.students.forEach(st => normalizeStudentClass(st));
+
+                    const studentClasses = s.students.map(st => formatClassName(st.class_name)).filter(Boolean);
+                    let existingClasses = Array.isArray(s.classes) ? s.classes.map(c => formatClassName(c)) : [];
+                    let combined = Array.from(new Set([...existingClasses, ...studentClasses]));
+                    if (combined.length === 0) {
+                        combined = ['One', 'Two', 'Three', 'Four', 'Five'];
+                    }
+                    s.classes = sortClassNames(combined);
+                });
+                return data;
+            }
+
+
 
             // ==========================================
             // GOOGLE FIREBASE CLOUD DATABASE CONFIGURATION
@@ -5811,80 +5898,6 @@
                         // ==========================================
             // FORMATTING HELPERS (CLASS NAMES & FULL GENDER)
             // ==========================================
-            function formatClassName(className) {
-                if (!className) return 'N/A';
-                const c = String(className).trim();
-                const map = {
-                    '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four',
-                    '5': 'Five', '6': 'Six', '7': 'Seven', '8': 'Eight',
-                    '9': 'Nine', '10': 'Ten', '11': 'Eleven', '12': 'Twelve',
-                    'class 1': 'One', 'class 2': 'Two', 'class 3': 'Three',
-                    'class 4': 'Four', 'class 5': 'Five', 'class 6': 'Six',
-                    'class 7': 'Seven', 'class 8': 'Eight', 'class 9': 'Nine',
-                    'class 10': 'Ten', 'class 11': 'Eleven', 'class 12': 'Twelve',
-                    'one': 'One', 'two': 'Two', 'three': 'Three', 'four': 'Four',
-                    'five': 'Five', 'six': 'Six', 'seven': 'Seven', 'eight': 'Eight',
-                    'nine': 'Nine', 'ten': 'Ten', 'eleven': 'Eleven', 'twelve': 'Twelve',
-                    'play': 'Play', 'nursery': 'Nursery', 'kg': 'KG', 'k.g': 'KG', 'alim': 'Alim'
-                };
-                const lower = c.toLowerCase();
-                if (map[lower]) return map[lower];
-                if (lower.startsWith('class ')) {
-                    const rest = lower.replace('class ', '').trim();
-                    if (map[rest]) return map[rest];
-                }
-                return c;
-            }
-
-            function formatGenderFull(gender) {
-                if (!gender) return 'N/A';
-                const g = String(gender).trim().toUpperCase();
-                if (g === 'M' || g === 'MALE' || g === 'BOY' || g === 'ছাত্র') return '👦 ছাত্র (Male)';
-                if (g === 'F' || g === 'FEMALE' || g === 'GIRL' || g === 'ছাত্রী') return '👧 ছাত্রী (Female)';
-                return gender;
-            }
-
-            const STANDARD_CLASS_ORDER = [
-                'Play', 'Nursery', 'KG', 'One', 'Two', 'Three', 'Four', 'Five',
-                'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Alim'
-            ];
-
-            function sortClassNames(classList) {
-                if (!Array.isArray(classList)) return [];
-                return Array.from(new Set(classList.map(c => formatClassName(c)).filter(Boolean))).sort((a, b) => {
-                    const idxA = STANDARD_CLASS_ORDER.indexOf(a);
-                    const idxB = STANDARD_CLASS_ORDER.indexOf(b);
-                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-                    if (idxA !== -1) return -1;
-                    if (idxB !== -1) return 1;
-                    return a.localeCompare(b, 'bn');
-                });
-            }
-
-            function normalizeStudentClass(st) {
-                if (!st) return;
-                if (st.class_name) {
-                    st.class_name = formatClassName(st.class_name);
-                }
-            }
-
-            function normalizeAllStudents(data) {
-                if (!Array.isArray(data)) return data;
-                data.forEach(s => {
-                    s.students = s.students || [];
-                    s.students.forEach(st => normalizeStudentClass(st));
-
-                    const studentClasses = s.students.map(st => formatClassName(st.class_name)).filter(Boolean);
-                    let existingClasses = Array.isArray(s.classes) ? s.classes.map(c => formatClassName(c)) : [];
-                    let combined = Array.from(new Set([...existingClasses, ...studentClasses]));
-                    if (combined.length === 0) {
-                        combined = ['One', 'Two', 'Three', 'Four', 'Five'];
-                    }
-                    s.classes = sortClassNames(combined);
-                });
-                return data;
-            }
-
             function calculateStats() {
                 let totalSt = 0, boys = 0, girls = 0;
                 const villages = {};
