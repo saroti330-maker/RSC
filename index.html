@@ -1706,11 +1706,91 @@
         }
 
         /* Print Media Query */
+        @page {
+            size: A4 portrait;
+            margin: 10mm 12mm 12mm 12mm;
+        }
+
         @media print {
             body {
-                background: white;
-                color: black;
-                font-size: 11pt;
+                background: white !important;
+                color: black !important;
+                font-size: 10pt !important;
+            }
+
+            body.printing-report-a4 * {
+                visibility: hidden !important;
+            }
+
+            body.printing-report-a4 #activePrintSheetArea,
+            body.printing-report-a4 #activePrintSheetArea * {
+                visibility: visible !important;
+            }
+
+            body.printing-report-a4 #activePrintSheetArea {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: transparent !important;
+            }
+
+            body.printing-report-a4 .a4-sheet {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                min-height: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            body.printing-report-a4 .a4-preview-wrapper {
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            body.printing-report-a4 .no-print,
+            body.printing-report-a4 .app-sidebar,
+            body.printing-report-a4 .header-card,
+            body.printing-report-a4 .reports-header-card,
+            body.printing-report-a4 .report-subnav-container,
+            body.printing-report-a4 .report-control-panel,
+            body.printing-report-a4 .btn,
+            body.printing-report-a4 .toast-notify {
+                display: none !important;
+            }
+
+            .a4-table {
+                page-break-inside: auto;
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+
+            .a4-table th,
+            .a4-table td {
+                border: 1px solid #333333 !important;
+            }
+
+            .a4-table th {
+                background-color: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .a4-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            .a4-table thead {
+                display: table-header-group;
+            }
+
+            .a4-signatures {
+                page-break-inside: avoid;
             }
 
             .container {
@@ -2579,6 +2659,333 @@
             background: var(--primary);
             color: #ffffff;
             border-color: var(--primary);
+        }
+
+        /* Reports View Styles & Sub-Options */
+        .report-subnav-container {
+            margin-bottom: 22px;
+        }
+
+        .report-subnav-bar {
+            display: flex;
+            gap: 10px;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            flex-wrap: wrap;
+        }
+
+        .report-subnav-btn {
+            flex: 1;
+            min-width: 220px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-700);
+            background: #f8fafc;
+            border: 1.5px solid transparent;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .report-subnav-btn:hover {
+            background: #e2e8f0;
+            color: var(--primary);
+        }
+
+        .report-subnav-btn.active {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .report-control-panel {
+            background: #ffffff;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .print-type-toggle-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .print-type-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 13.5px;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 2px solid #cbd5e1;
+            background: #f8fafc;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .print-type-pill:hover {
+            border-color: #94a3b8;
+            background: #f1f5f9;
+        }
+
+        .print-type-pill.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+        }
+
+        .report-filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+            align-items: flex-end;
+        }
+
+        /* A4 Page Preview Canvas */
+        .a4-preview-wrapper {
+            background: #475569;
+            padding: 30px 15px;
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .a4-sheet {
+            background: #ffffff;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 16mm 14mm 16mm 14mm;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+            box-sizing: border-box;
+            color: #0f172a;
+            font-family: 'Hind Siliguri', 'Segoe UI', Arial, sans-serif;
+            position: relative;
+            border-radius: 3px;
+        }
+
+        .a4-sheet.landscape {
+            width: 297mm;
+            min-height: 210mm;
+        }
+
+        .a4-report-header {
+            border-bottom: 2.5px solid #1e3a8a;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .a4-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .a4-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        .a4-title-group h2 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin: 0 0 2px 0;
+            line-height: 1.2;
+        }
+
+        .a4-title-group h3 {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 2px 0;
+        }
+
+        .a4-title-group p {
+            font-size: 11px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .a4-report-meta {
+            text-align: right;
+            font-size: 11px;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .a4-report-meta strong {
+            color: #0f172a;
+        }
+
+        .a4-summary-bar {
+            display: flex;
+            gap: 12px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin-bottom: 12px;
+            font-size: 11.5px;
+            font-weight: 600;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Crisp Table for A4 */
+        .a4-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+            margin-top: 6px;
+            margin-bottom: 14px;
+        }
+
+        .a4-table th, .a4-table td {
+            border: 1px solid #cbd5e1;
+            padding: 5px 6px;
+            line-height: 1.25;
+        }
+
+        .a4-table th {
+            background: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+            text-align: left;
+            font-size: 10px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .a4-table tr:nth-child(even) td {
+            background-color: #f8fafc;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .a4-signatures {
+            margin-top: 32px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            page-break-inside: avoid;
+        }
+
+        .a4-sig-block {
+            text-align: center;
+            font-size: 10.5px;
+            color: #334155;
+            width: 150px;
+            border-top: 1px dashed #64748b;
+            padding-top: 5px;
+        }
+
+        /* Village Tikmark Chips */
+        .village-chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .village-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .village-chip:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .village-chip input[type="checkbox"] {
+            cursor: pointer;
+            width: 15px;
+            height: 15px;
+            accent-color: #2563eb;
+        }
+
+        .village-chip .v-count {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .village-chip.selected {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+        }
+
+        .village-chip.selected .v-count {
+            background: #bfdbfe;
+            color: #1e40af;
+        }
+
+        .village-student-table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            background: #ffffff;
+        }
+
+        .village-badge-cell {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 11.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
         }
 
         /* Reports View Styles */
@@ -3561,112 +3968,275 @@
                     <div class="container">
                         <!-- Reports Header Banner -->
                         <div class="reports-header-card">
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
                                 <div>
                                     <div class="badge-project" style="margin-bottom: 6px;">
-                                        <span>📊</span> <span>বিশ্লেষণ ও প্রতিবেদন</span>
+                                        <span>📊</span> <span>বিশ্লেষণ, অনুসন্ধান ও A4 প্রিন্ট রিপোর্ট</span>
                                     </div>
                                     <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
-                                        প্রতিষ্ঠান ও শিক্ষার্থী রিপোর্ট</h1>
-                                    <p style="font-size: 13.5px; color: var(--gray-600);">প্রতিষ্ঠান, গ্রাম ও আয়ভিত্তিক পরিসংখ্যান।</p>
+                                        প্রতিষ্ঠান, শিক্ষার্থী ও গ্রাম রিপোর্ট
+                                    </h1>
+                                    <p style="font-size: 13.5px; color: var(--gray-600);">
+                                        A4 প্রিন্টিং টাইপ (School, Student, Class) এবং গ্রামভিত্তিক শিক্ষার্থী তালিকা ও টিকমার্ক অপশন।
+                                    </p>
                                 </div>
                                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                    <button type="button" class="btn btn-secondary" onclick="window.print()">
-                                        <span>🖨️</span> <span>প্রিন্ট</span>
+                                    <button type="button" class="btn btn-secondary" onclick="printActiveReportTab()">
+                                        <span>🖨️</span> <span>প্রিন্ট (A4)</span>
                                     </button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="document.getElementById('exportCsvBtn').click()">
+                                    <button type="button" class="btn btn-primary" onclick="exportActiveReportCsv()">
                                         <span>📥</span> <span>এক্সেল</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 1. School Wise Comparison Table -->
-                        <div class="report-panel">
-                            <div class="report-panel-title">
-                                <span>🏫</span> <span>১. প্রতিষ্ঠানভিত্তিক সারসংক্ষেপ</span>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="report-table" id="reportSchoolsTable">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 40px;">ক্র.</th>
-                                            <th>শিক্ষা প্রতিষ্ঠানের নাম</th>
-                                            <th style="text-align:center;">মোট শিক্ষার্থী</th>
-                                            <th style="text-align:center;">ছাত্র (Boys)</th>
-                                            <th style="text-align:center;">ছাত্রী (Girls)</th>
-                                            <th style="text-align:center;">ছাত্রী হার %</th>
-                                            <th style="text-align:right;">গড় আয় (BDT)</th>
-                                            <th style="text-align:right;">গড় আয় (USD)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="reportSchoolsTbody">
-                                        <!-- Populated dynamically -->
-                                    </tbody>
-                                </table>
+                        <!-- Sub-Options Navigation Bar -->
+                        <div class="report-subnav-container">
+                            <div class="report-subnav-bar">
+                                <button type="button" class="report-subnav-btn active" id="subBtnPrint" onclick="switchReportSubOption('print')">
+                                    <span>🖨️</span> <span>অপশন ১: প্রিন্টিং টাইপ (School / Student / Class)</span>
+                                </button>
+                                <button type="button" class="report-subnav-btn" id="subBtnVillage" onclick="switchReportSubOption('village')">
+                                    <span>🏡</span> <span>অপশন ২: ভিলেজ টাইপ (Village Type ও টিকমার্ক)</span>
+                                </button>
+                                <button type="button" class="report-subnav-btn" id="subBtnOverview" onclick="switchReportSubOption('overview')">
+                                    <span>📊</span> <span>পরিসংখ্যান ওভারভিউ</span>
+                                </button>
                             </div>
                         </div>
 
-                        <!-- 2. Village Breakdown Table -->
-                        <div class="report-panel">
-                            <div class="report-panel-title">
-                                <span>🏡</span> <span>২. গ্রাম / এলাকাভিত্তিক শিক্ষার্থী বণ্টন রিপোর্ট (১৯টি
-                                    গ্রাম)</span>
+                        <!-- SUB-VIEW 1: Option 1 - Printing Type (School Type, Student Type, Class Type) -->
+                        <div id="reportSubViewPrint" class="report-subview">
+                            <!-- Controls Card -->
+                            <div class="report-control-panel">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+                                    <div>
+                                        <span style="font-size:15px; font-weight:800; color:#1e293b;">🖨️ প্রিন্ট রিপোর্টের ধরণ নির্বাচন করুন (Printing Type):</span>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <span class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:12px; padding:4px 10px; border-radius:6px;">📄 Page Size: A4</span>
+                                        <select id="printOrientationSelect" class="select-filter" style="padding:6px 12px; font-size:13px;" onchange="toggleA4Orientation(this.value)">
+                                            <option value="portrait">খাড়া / উল্লম্ব (Portrait)</option>
+                                            <option value="landscape">আড়াআড়ি / ল্যান্ডস্কেপ (Landscape)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- 3 Printing Type Pills -->
+                                <div class="print-type-toggle-group">
+                                    <button type="button" class="print-type-pill active" id="ptBtnSchool" onclick="switchPrintType('school')">
+                                        <span>🏫</span> <span>School Type (প্রতিষ্ঠানভিত্তিক)</span>
+                                    </button>
+                                    <button type="button" class="print-type-pill" id="ptBtnStudent" onclick="switchPrintType('student')">
+                                        <span>🎓</span> <span>Student Type (শিক্ষার্থীভিত্তিক)</span>
+                                    </button>
+                                    <button type="button" class="print-type-pill" id="ptBtnClass" onclick="switchPrintType('class')">
+                                        <span>📚</span> <span>Class Type (শ্রেণিভিত্তিক)</span>
+                                    </button>
+                                </div>
+
+                                <!-- Dynamic Filters based on active type -->
+                                <div class="report-filters-grid" id="printFiltersArea">
+                                    <!-- Dynamic Filter Controls generated by JS -->
+                                </div>
+
+                                <!-- Action Button Bar -->
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:14px; border-top:1px solid #e2e8f0;">
+                                    <div id="printTypeStatsHint" style="font-size:13px; color:#475569; font-weight:600;">
+                                        <!-- e.g. প্রদর্শিত শিক্ষার্থী: ২২৬ জন -->
+                                    </div>
+                                    <div style="display:flex; gap:10px;">
+                                        <button type="button" class="btn btn-success" onclick="printA4Report('printTypeA4Sheet')" style="font-weight:700; padding:9px 20px; font-size:14px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+                                            <span>🖨️</span> <span>A4 পেজে প্রিন্ট করুন</span>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" onclick="exportPrintTypeCsv()" style="font-size:13.5px; padding:9px 16px;">
+                                            <span>📥</span> <span>এক্সেল (CSV)</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="report-table" id="reportVillagesTable">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 40px;">ক্র.</th>
-                                            <th>গ্রাম / এলাকার নাম</th>
-                                            <th style="text-align:center;">মোট শিক্ষার্থী</th>
-                                            <th style="text-align:center;">ছাত্র</th>
-                                            <th style="text-align:center;">ছাত্রী</th>
-                                            <th style="text-align:center;">শতকরা হার %</th>
-                                            <th style="text-align:right;">গড় মাসিক আয় (BDT)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="reportVillagesTbody">
-                                        <!-- Populated dynamically -->
-                                    </tbody>
-                                </table>
+
+                            <!-- A4 Sheet Live Preview Container -->
+                            <div class="a4-preview-wrapper">
+                                <div class="a4-sheet" id="printTypeA4Sheet">
+                                    <!-- Populated dynamically by renderPrintTypeReport() -->
+                                </div>
                             </div>
                         </div>
 
-                        <!-- 3. Income Bracket Analysis -->
-                        <div class="report-panel">
-                            <div class="report-panel-title">
-                                <span>💰</span> <span>৩. পারিবারিক মাসিক আয় ও জীবনমান বিশ্লেষণ</span>
+                        <!-- SUB-VIEW 2: Option 2 - Village Type (All Village Names & Tikmark Option) -->
+                        <div id="reportSubViewVillage" class="report-subview" style="display:none;">
+                            <!-- Village Selection & Tikmark Panel -->
+                            <div class="report-control-panel">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                                    <div>
+                                        <h3 style="margin:0; font-size:16px; font-weight:800; color:#1e293b; display:flex; align-items:center; gap:8px;">
+                                            <span>🏡</span> <span>সকল গ্রামের নাম ও টিকমার্ক অপশন (Village Selection)</span>
+                                        </h3>
+                                        <p style="margin:4px 0 0 0; font-size:12.5px; color:#64748b;">
+                                            যেসব গ্রামের শিক্ষার্থীদের রিপোর্ট দেখতে ও প্রিন্ট করতে চান সেগুলো টিক দিন।
+                                        </p>
+                                    </div>
+                                    <div style="display:flex; gap:8px; align-items:center;">
+                                        <button type="button" class="btn btn-secondary" style="font-size:12px; padding:5px 12px;" onclick="toggleAllVillages(true)">
+                                            <span>✓</span> <span>সব গ্রাম টিক দিন</span>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" style="font-size:12px; padding:5px 12px;" onclick="toggleAllVillages(false)">
+                                            <span>✕</span> <span>সব টিক মুছুন</span>
+                                        </button>
+                                        <span class="badge" id="vSelectedCountBadge" style="background:#dbeafe; color:#1e40af; font-weight:700; font-size:12px; padding:6px 12px; border-radius:6px;">
+                                            নির্বাচিত: ১৯ / ১৯ গ্রাম
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Village Chips with Tikmarks -->
+                                <div class="village-chip-grid" id="villageChipsGrid">
+                                    <!-- Populated dynamically with all unique villages -->
+                                </div>
+
+                                <!-- Student Selection Bar & Counter -->
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding:12px 14px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; margin-bottom:14px;">
+                                    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+                                        <label style="display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13.5px; color:#166534; cursor:pointer;">
+                                            <input type="checkbox" id="vMasterStudentCb" checked onchange="toggleAllVillageStudents(this.checked)" style="width:17px; height:17px; cursor:pointer; accent-color:#16a34a;">
+                                            <span>সকল শিক্ষার্থী নির্বাচন করুন</span>
+                                        </label>
+                                        <span id="vStudentSelectedSummary" style="font-size:13px; font-weight:700; color:#15803d;">
+                                            📌 নির্বাচিত: ২২৬ জন শিক্ষার্থী
+                                        </span>
+                                    </div>
+                                    <div style="display:flex; gap:10px; align-items:center;">
+                                        <span class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:12px; padding:4px 10px; border-radius:6px;">📄 Page Size: A4</span>
+                                        <button type="button" class="btn btn-success" onclick="printA4Report('villageTypeA4Sheet')" style="font-weight:700; padding:8px 18px; font-size:13.5px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+                                            <span>🖨️</span> <span>নির্বাচিতদের A4 প্রিন্ট করুন</span>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" onclick="exportVillageReportCsv()" style="font-size:12.5px; padding:8px 14px;">
+                                            <span>📥</span> <span>এক্সেল</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Student List with Village & Individual Tikmarks -->
+                                <div class="village-student-table-container">
+                                    <table class="report-table" id="villageStudentTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:40px; text-align:center;">টিক (✓)</th>
+                                                <th style="width:40px; text-align:center;">ক্র.</th>
+                                                <th style="width:90px;">শিক্ষার্থী আইডি</th>
+                                                <th>শিক্ষার্থীর নাম</th>
+                                                <th>গ্রাম / এলাকা</th>
+                                                <th>শিক্ষা প্রতিষ্ঠান</th>
+                                                <th style="text-align:center;">শ্রেণি ও রোল</th>
+                                                <th>অভিভাবক ও মোবাইল</th>
+                                                <th style="text-align:center;">লিঙ্গ</th>
+                                                <th style="text-align:right;">মাসিক আয়</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="villageStudentTbody">
+                                            <!-- Populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="income-report-cards-grid" id="reportIncomeCardsGrid">
-                                <!-- Populated dynamically -->
+
+                            <!-- A4 Sheet Live Preview Container for Village Report -->
+                            <div class="a4-preview-wrapper">
+                                <div class="a4-sheet" id="villageTypeA4Sheet">
+                                    <!-- Populated dynamically by renderVillageA4Report() -->
+                                </div>
                             </div>
                         </div>
 
-                        <!-- 4. Class-wise Distribution -->
-                        <div class="report-panel">
-                            <div class="report-panel-title">
-                                <span>🎓</span> <span>৪. শ্রেণিভিত্তিক (Class-wise) শিক্ষার্থী বণ্টন</span>
+                        <!-- SUB-VIEW 3: Overview (Original 4 Tables) -->
+                        <div id="reportSubViewOverview" class="report-subview" style="display:none;">
+                            <!-- 1. School Wise Comparison Table -->
+                            <div class="report-panel">
+                                <div class="report-panel-title">
+                                    <span>🏫</span> <span>১. প্রতিষ্ঠানভিত্তিক সারসংক্ষেপ</span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="report-table" id="reportSchoolsTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40px;">ক্র.</th>
+                                                <th>শিক্ষা প্রতিষ্ঠানের নাম</th>
+                                                <th style="text-align:center;">মোট শিক্ষার্থী</th>
+                                                <th style="text-align:center;">ছাত্র (Boys)</th>
+                                                <th style="text-align:center;">ছাত্রী (Girls)</th>
+                                                <th style="text-align:center;">ছাত্রী হার %</th>
+                                                <th style="text-align:right;">গড় আয় (BDT)</th>
+                                                <th style="text-align:right;">গড় আয় (USD)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reportSchoolsTbody">
+                                            <!-- Populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="report-table" id="reportClassesTable">
-                                    <thead>
-                                        <tr>
-                                            <th>শ্রেণি (Class)</th>
-                                            <th style="text-align:center;">মোট শিক্ষার্থী</th>
-                                            <th style="text-align:center;">ছাত্র (Boys)</th>
-                                            <th style="text-align:center;">ছাত্রী (Girls)</th>
-                                            <th style="text-align:center;">শতকরা হার %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="reportClassesTbody">
-                                        <!-- Populated dynamically -->
-                                    </tbody>
-                                </table>
+
+                            <!-- 2. Village Breakdown Table -->
+                            <div class="report-panel">
+                                <div class="report-panel-title">
+                                    <span>🏡</span> <span>২. গ্রাম / এলাকাভিত্তিক শিক্ষার্থী বণ্টন রিপোর্ট (১৯টি গ্রাম)</span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="report-table" id="reportVillagesTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40px;">ক্র.</th>
+                                                <th>গ্রাম / এলাকার নাম</th>
+                                                <th style="text-align:center;">মোট শিক্ষার্থী</th>
+                                                <th style="text-align:center;">ছাত্র</th>
+                                                <th style="text-align:center;">ছাত্রী</th>
+                                                <th style="text-align:center;">শতকরা হার %</th>
+                                                <th style="text-align:right;">গড় মাসিক আয় (BDT)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reportVillagesTbody">
+                                            <!-- Populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- 3. Income Bracket Analysis -->
+                            <div class="report-panel">
+                                <div class="report-panel-title">
+                                    <span>💰</span> <span>৩. পারিবারিক মাসিক আয় ও জীবনমান বিশ্লেষণ</span>
+                                </div>
+                                <div class="income-report-cards-grid" id="reportIncomeCardsGrid">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- 4. Class-wise Distribution -->
+                            <div class="report-panel">
+                                <div class="report-panel-title">
+                                    <span>🎓</span> <span>৪. শ্রেণিভিত্তিক (Class-wise) শিক্ষার্থী বণ্টন</span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="report-table" id="reportClassesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>শ্রেণি (Class)</th>
+                                                <th style="text-align:center;">মোট শিক্ষার্থী</th>
+                                                <th style="text-align:center;">ছাত্র (Boys)</th>
+                                                <th style="text-align:center;">ছাত্রী (Girls)</th>
+                                                <th style="text-align:center;">শতকরা হার %</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reportClassesTbody">
+                                            <!-- Populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </section><!-- /viewReports -->
 
@@ -6382,7 +6952,819 @@
                 container.innerHTML = html;
             }
 
+            // ==========================================
+            // REPORT ENGINE (OPTION 1: PRINTING TYPE & OPTION 2: VILLAGE TYPE) - A4
+            // ==========================================
+            let currentReportSubOption = 'print'; // 'print', 'village', 'overview'
+            let currentPrintType = 'school';      // 'school', 'student', 'class'
+            let currentPrintSchool = 'ALL';
+            let currentPrintClass = 'ALL';
+            let currentPrintGender = 'ALL';
+            let currentPrintSearch = '';
+            let printOrientation = 'portrait';    // 'portrait', 'landscape'
+
+            let selectedVillagesSet = new Set();
+            let selectedVillageStudentIds = new Set();
+            let allKnownVillages = [];
+
+            // Master entry point when Reports view is opened
             function renderReports() {
+                // 1. Populate Overview tables
+                renderReportsOverview();
+
+                // 2. Initialize Options
+                initPrintTypeReports();
+                initVillageTypeReports();
+
+                // 3. Switch to current active sub-option
+                switchReportSubOption(currentReportSubOption);
+            }
+
+            function switchReportSubOption(subOpt) {
+                currentReportSubOption = subOpt;
+
+                const btns = {
+                    'print': 'subBtnPrint',
+                    'village': 'subBtnVillage',
+                    'overview': 'subBtnOverview'
+                };
+                const views = {
+                    'print': 'reportSubViewPrint',
+                    'village': 'reportSubViewVillage',
+                    'overview': 'reportSubViewOverview'
+                };
+
+                Object.keys(btns).forEach(key => {
+                    const b = document.getElementById(btns[key]);
+                    if (b) b.classList.toggle('active', key === subOpt);
+                });
+
+                Object.keys(views).forEach(key => {
+                    const v = document.getElementById(views[key]);
+                    if (v) v.style.display = (key === subOpt) ? 'block' : 'none';
+                });
+
+                if (subOpt === 'print') {
+                    renderPrintFilters();
+                    renderPrintTypeReport();
+                } else if (subOpt === 'village') {
+                    renderVillageChips();
+                    renderVillageStudentList();
+                    renderVillageA4Report();
+                } else if (subOpt === 'overview') {
+                    renderReportsOverview();
+                }
+            }
+
+            // -------------------------------------------------------------
+            // OPTION 1: PRINTING TYPE (SCHOOL TYPE, STUDENT TYPE, CLASS TYPE)
+            // -------------------------------------------------------------
+            function initPrintTypeReports() {
+                renderPrintFilters();
+                renderPrintTypeReport();
+            }
+
+            function switchPrintType(type) {
+                currentPrintType = type;
+                ['ptBtnSchool', 'ptBtnStudent', 'ptBtnClass'].forEach(id => {
+                    const btn = document.getElementById(id);
+                    if (btn) btn.classList.remove('active');
+                });
+
+                if (type === 'school') {
+                    document.getElementById('ptBtnSchool')?.classList.add('active');
+                } else if (type === 'student') {
+                    document.getElementById('ptBtnStudent')?.classList.add('active');
+                } else if (type === 'class') {
+                    document.getElementById('ptBtnClass')?.classList.add('active');
+                }
+
+                renderPrintFilters();
+                renderPrintTypeReport();
+            }
+
+            function renderPrintFilters() {
+                const area = document.getElementById('printFiltersArea');
+                if (!area) return;
+
+                let html = '';
+
+                if (currentPrintType === 'school') {
+                    html += `
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🏫 শিক্ষা প্রতিষ্ঠান নির্বাচন করুন:</label>
+                            <select id="pSchoolSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintSchool = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintSchool === 'ALL' ? 'selected' : ''}>সকল শিক্ষা প্রতিষ্ঠান (১৯টি বিদ্যালয়)</option>
+                                ${schoolsData.map(s => `<option value="${s.num}" ${currentPrintSchool == s.num ? 'selected' : ''}>#${s.num} - ${s.name_bn}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🚻 লিঙ্গ ফিল্টার:</label>
+                            <select id="pGenderSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintGender = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintGender === 'ALL' ? 'selected' : ''}>সকল লিঙ্গ (ছাত্র ও ছাত্রী)</option>
+                                <option value="M" ${currentPrintGender === 'M' ? 'selected' : ''}>👦 শুধু ছাত্র (Boys)</option>
+                                <option value="F" ${currentPrintGender === 'F' ? 'selected' : ''}>👧 শুধু ছাত্রী (Girls)</option>
+                            </select>
+                        </div>
+                    `;
+                } else if (currentPrintType === 'student') {
+                    // Extract all unique classes
+                    const classSet = new Set();
+                    schoolsData.forEach(s => (s.students || []).forEach(st => {
+                        if (st.class_name) classSet.add(st.class_name.trim());
+                    }));
+                    const sortedClasses = Array.from(classSet).sort((a,b) => a.localeCompare(b, undefined, {numeric: true}));
+
+                    html += `
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🏫 প্রতিষ্ঠান:</label>
+                            <select id="pSchoolSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintSchool = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintSchool === 'ALL' ? 'selected' : ''}>সকল শিক্ষা প্রতিষ্ঠান</option>
+                                ${schoolsData.map(s => `<option value="${s.num}" ${currentPrintSchool == s.num ? 'selected' : ''}>#${s.num} - ${s.name_bn}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🎓 শ্রেণি:</label>
+                            <select id="pClassSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintClass = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintClass === 'ALL' ? 'selected' : ''}>সকল শ্রেণি (All Classes)</option>
+                                ${sortedClasses.map(c => `<option value="${c}" ${currentPrintClass === c ? 'selected' : ''}>শ্রেণি: ${c}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🚻 লিঙ্গ:</label>
+                            <select id="pGenderSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintGender = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintGender === 'ALL' ? 'selected' : ''}>সকল লিঙ্গ</option>
+                                <option value="M" ${currentPrintGender === 'M' ? 'selected' : ''}>👦 ছাত্র</option>
+                                <option value="F" ${currentPrintGender === 'F' ? 'selected' : ''}>👧 ছাত্রী</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🔍 নাম বা আইডি দিয়ে খুঁজুন:</label>
+                            <input type="text" class="search-input" style="width:100%; padding:9px 12px; font-size:13px;" placeholder="শিক্ষার্থীর নাম বা আইডি..." value="${currentPrintSearch}" oninput="currentPrintSearch = this.value.trim(); renderPrintTypeReport();">
+                        </div>
+                    `;
+                } else if (currentPrintType === 'class') {
+                    const classSet = new Set();
+                    schoolsData.forEach(s => (s.students || []).forEach(st => {
+                        if (st.class_name) classSet.add(st.class_name.trim());
+                    }));
+                    const sortedClasses = Array.from(classSet).sort((a,b) => a.localeCompare(b, undefined, {numeric: true}));
+
+                    html += `
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">📚 নির্দিষ্ট শ্রেণি নির্বাচন করুন:</label>
+                            <select id="pClassSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintClass = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintClass === 'ALL' ? 'selected' : ''}>সকল শ্রেণি (Class 1 to 10+)</option>
+                                ${sortedClasses.map(c => `<option value="${c}" ${currentPrintClass === c ? 'selected' : ''}>শ্রেণি: ${c}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🏫 শিক্ষা প্রতিষ্ঠান:</label>
+                            <select id="pSchoolSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintSchool = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintSchool === 'ALL' ? 'selected' : ''}>সকল শিক্ষা প্রতিষ্ঠান</option>
+                                ${schoolsData.map(s => `<option value="${s.num}" ${currentPrintSchool == s.num ? 'selected' : ''}>#${s.num} - ${s.name_bn}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label style="font-size:12px; font-weight:700; color:#475569; margin-bottom:4px; display:block;">🚻 লিঙ্গ ফিল্টার:</label>
+                            <select id="pGenderSelect" class="select-filter" style="width:100%; padding:9px 12px; font-size:13.5px;" onchange="currentPrintGender = this.value; renderPrintTypeReport();">
+                                <option value="ALL" ${currentPrintGender === 'ALL' ? 'selected' : ''}>সকল লিঙ্গ</option>
+                                <option value="M" ${currentPrintGender === 'M' ? 'selected' : ''}>👦 শুধু ছাত্র</option>
+                                <option value="F" ${currentPrintGender === 'F' ? 'selected' : ''}>👧 শুধু ছাত্রী</option>
+                            </select>
+                        </div>
+                    `;
+                }
+
+                area.innerHTML = html;
+            }
+
+            function toggleA4Orientation(val) {
+                printOrientation = val;
+                const sheet1 = document.getElementById('printTypeA4Sheet');
+                const sheet2 = document.getElementById('villageTypeA4Sheet');
+                if (sheet1) sheet1.classList.toggle('landscape', val === 'landscape');
+                if (sheet2) sheet2.classList.toggle('landscape', val === 'landscape');
+
+                let styleEl = document.getElementById('dynamicA4PageStyle');
+                if (!styleEl) {
+                    styleEl = document.createElement('style');
+                    styleEl.id = 'dynamicA4PageStyle';
+                    document.head.appendChild(styleEl);
+                }
+                styleEl.textContent = `@page { size: A4 ${val}; margin: 10mm 12mm 12mm 12mm; }`;
+            }
+
+            function renderPrintTypeReport() {
+                const sheet = document.getElementById('printTypeA4Sheet');
+                if (!sheet) return;
+
+                // Gather and filter students
+                let matchedStudents = [];
+                schoolsData.forEach(s => {
+                    if (currentPrintSchool !== 'ALL' && s.num != currentPrintSchool) return;
+
+                    (s.students || []).forEach(st => {
+                        if (currentPrintGender !== 'ALL' && st.gender !== currentPrintGender) return;
+                        if (currentPrintClass !== 'ALL' && (st.class_name || '').trim() !== currentPrintClass) return;
+
+                        if (currentPrintSearch) {
+                            const q = currentPrintSearch.toLowerCase();
+                            const match = (st.name || '').toLowerCase().includes(q) ||
+                                          (st.name_bn || '').toLowerCase().includes(q) ||
+                                          (st.id || '').toLowerCase().includes(q) ||
+                                          (st.village || '').toLowerCase().includes(q) ||
+                                          (st.father_name || '').toLowerCase().includes(q);
+                            if (!match) return;
+                        }
+
+                        matchedStudents.push({
+                            ...st,
+                            school_num: s.num,
+                            school_name_bn: s.name_bn,
+                            school_name_en: s.name_en
+                        });
+                    });
+                });
+
+                // Update stats hint
+                const hint = document.getElementById('printTypeStatsHint');
+                if (hint) {
+                    hint.innerHTML = `📌 প্রদর্শিত শিক্ষার্থী: <strong>${matchedStudents.length} জন</strong>`;
+                }
+
+                // Determine report title & metadata
+                let reportTitle = '';
+                let reportSubtitle = '';
+                if (currentPrintType === 'school') {
+                    if (currentPrintSchool === 'ALL') {
+                        reportTitle = 'প্রতিষ্ঠানভিত্তিক শিক্ষার্থী প্রতিবেদন (School-Wise Report)';
+                        reportSubtitle = 'সকল শিক্ষা প্রতিষ্ঠান (১৯টি বিদ্যালয়) — শিক্ষার্থী তালিকা ও পরিসংখ্যান';
+                    } else {
+                        const sc = schoolsData.find(s => s.num == currentPrintSchool);
+                        reportTitle = `প্রতিষ্ঠানভিত্তিক প্রতিবেদন: ${sc ? sc.name_bn : 'শিক্ষা প্রতিষ্ঠান'}`;
+                        reportSubtitle = `প্রতিষ্ঠান নম্বর: #${currentPrintSchool} | এলাকা: নীলফামারী`;
+                    }
+                } else if (currentPrintType === 'student') {
+                    reportTitle = 'শিক্ষার্থী প্রোফাইল ও ডাটাবেজ প্রতিবেদন (Student Profile Report)';
+                    reportSubtitle = `ফিল্টার: ${currentPrintSchool === 'ALL' ? 'সকল বিদ্যালয়' : 'প্রতিষ্ঠান #' + currentPrintSchool} | শ্রেণি: ${currentPrintClass === 'ALL' ? 'সকল শ্রেণি' : currentPrintClass}`;
+                } else if (currentPrintType === 'class') {
+                    reportTitle = `শ্রেণিভিত্তিক শিক্ষার্থী প্রতিবেদন (Class-Wise Report: ${currentPrintClass === 'ALL' ? 'সকল শ্রেণি' : 'শ্রেণি ' + currentPrintClass})`;
+                    reportSubtitle = `শ্রেণিভিত্তিক শিক্ষার্থী বণ্টন ও তথ্য তালিকা`;
+                }
+
+                // Counts
+                const totalSt = matchedStudents.length;
+                const boys = matchedStudents.filter(s => s.gender === 'M').length;
+                const girls = matchedStudents.filter(s => s.gender === 'F').length;
+
+                const logoSrc = document.querySelector('.home-hero-logo')?.src || '';
+
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                let html = `
+                    <div class="a4-report-header">
+                        <div class="a4-brand">
+                            ${logoSrc ? `<img src="${logoSrc}" alt="RSC" class="a4-logo">` : ''}
+                            <div class="a4-title-group">
+                                <h2>RIGHTS & SIGHT FOR CHILDREN (RSC)</h2>
+                                <h3>Sun Child Sponsorship Program (SCSP)</h3>
+                                <p style="font-weight:700; color:#1e40af;">${reportTitle}</p>
+                                <p>${reportSubtitle}</p>
+                            </div>
+                        </div>
+                        <div class="a4-report-meta">
+                            <div><strong>প্রকল্প এলাকা:</strong> নীলফামারী</div>
+                            <div><strong>মুদ্রণ তারিখ:</strong> ${dateStr}</div>
+                            <div><strong>পেজ সাইজ:</strong> A4 (${printOrientation === 'landscape' ? 'ল্যান্ডস্কেপ' : 'পোর্ট্রেট'})</div>
+                        </div>
+                    </div>
+
+                    <div class="a4-summary-bar">
+                        <span>📊 মোট শিক্ষার্থী: <strong>${totalSt} জন</strong></span>
+                        <span style="color:#1d4ed8;">👦 ছাত্র: <strong>${boys} জন</strong> (${totalSt > 0 ? ((boys/totalSt)*100).toFixed(1) : 0}%)</span>
+                        <span style="color:#be185d;">👧 ছাত্রী: <strong>${girls} জন</strong> (${totalSt > 0 ? ((girls/totalSt)*100).toFixed(1) : 0}%)</span>
+                        <span>🏢 অন্তর্ভুক্ত প্রতিষ্ঠান: <strong>${currentPrintSchool === 'ALL' ? '১৯টি' : '১টি'}</strong></span>
+                    </div>
+
+                    <table class="a4-table">
+                        <thead>
+                            <tr>
+                                <th style="width:28px; text-align:center;">ক্র.</th>
+                                <th style="width:75px;">আইডি</th>
+                                <th>শিক্ষার্থীর নাম</th>
+                                <th style="text-align:center; width:45px;">লিঙ্গ</th>
+                                <th style="width:80px;">শ্রেণি ও রোল</th>
+                                ${currentPrintType !== 'school' ? '<th>শিক্ষা প্রতিষ্ঠান</th>' : ''}
+                                <th>অভিভাবকের নাম</th>
+                                <th>গ্রাম / এলাকা</th>
+                                <th style="width:90px;">মোবাইল</th>
+                                <th style="text-align:right; width:65px;">মাসিক আয়</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${matchedStudents.length === 0 ? `
+                                <tr>
+                                    <td colspan="${currentPrintType !== 'school' ? 10 : 9}" style="text-align:center; padding:24px; color:#64748b;">
+                                        কোনো শিক্ষার্থী পাওয়া যায়নি। ফিল্টার পরিবর্তন করুন।
+                                    </td>
+                                </tr>
+                            ` : matchedStudents.map((st, idx) => `
+                                <tr>
+                                    <td style="text-align:center; font-weight:600;">${idx + 1}</td>
+                                    <td><strong style="color:#1e3a8a;">${st.id}</strong></td>
+                                    <td>
+                                        <div style="font-weight:700;">${st.name_bn || st.name}</div>
+                                        ${st.name_bn && st.name !== st.name_bn ? `<div style="font-size:9px; color:#64748b;">${st.name}</div>` : ''}
+                                    </td>
+                                    <td style="text-align:center; font-weight:600; color:${st.gender === 'M' ? '#1d4ed8' : '#be185d'};">
+                                        ${st.gender === 'M' ? 'ছাত্র' : 'ছাত্রী'}
+                                    </td>
+                                    <td>${st.class_name ? 'শ্রেণি ' + st.class_name : 'N/A'}${st.sl ? ' (' + st.sl + ')' : ''}</td>
+                                    ${currentPrintType !== 'school' ? `<td style="font-size:9.5px;">${st.school_name_bn || ''}</td>` : ''}
+                                    <td style="font-size:9.5px;">${st.father_name || st.mother_name || 'অভিভাবক'}</td>
+                                    <td>${st.village || 'N/A'}</td>
+                                    <td style="font-size:9.5px;">${st.mobile || 'N/A'}</td>
+                                    <td style="text-align:right; font-weight:600;">৳${st.income_bdt ? parseInt(st.income_bdt, 10).toLocaleString('bn-BD') : '০'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="a4-signatures">
+                        <div class="a4-sig-block">
+                            প্রস্তুতকারীর স্বাক্ষর ও তারিখ
+                        </div>
+                        <div class="a4-sig-block">
+                            ফিল্ড অফিসার / সুপারভাইজার
+                        </div>
+                        <div class="a4-sig-block">
+                            প্রকল্প সমন্বয়কারী, RSC
+                        </div>
+                    </div>
+                `;
+
+                sheet.innerHTML = html;
+            }
+
+            // -------------------------------------------------------------
+            // OPTION 2: VILLAGE TYPE (ALL VILLAGE NAMES & TIKMARK OPTION)
+            // -------------------------------------------------------------
+            function initVillageTypeReports() {
+                // 1. Discover all unique villages from schoolsData
+                const vMap = {};
+                schoolsData.forEach(s => {
+                    (s.students || []).forEach(st => {
+                        const v = (st.village || 'অনির্ধারিত').trim();
+                        vMap[v] = (vMap[v] || 0) + 1;
+                    });
+                });
+                allKnownVillages = Object.keys(vMap).sort((a,b) => a.localeCompare(b));
+
+                // Default: all villages selected if set is empty
+                if (selectedVillagesSet.size === 0) {
+                    allKnownVillages.forEach(v => selectedVillagesSet.add(v));
+                }
+
+                // Default: all student IDs in selected villages selected
+                if (selectedVillageStudentIds.size === 0) {
+                    schoolsData.forEach(s => {
+                        (s.students || []).forEach(st => {
+                            const v = (st.village || 'অনির্ধারিত').trim();
+                            if (selectedVillagesSet.has(v)) {
+                                selectedVillageStudentIds.add(st.id);
+                            }
+                        });
+                    });
+                }
+
+                renderVillageChips();
+                renderVillageStudentList();
+                renderVillageA4Report();
+            }
+
+            function renderVillageChips() {
+                const grid = document.getElementById('villageChipsGrid');
+                if (!grid) return;
+
+                // Count students per village
+                const vCounts = {};
+                schoolsData.forEach(s => {
+                    (s.students || []).forEach(st => {
+                        const v = (st.village || 'অনির্ধারিত').trim();
+                        vCounts[v] = (vCounts[v] || 0) + 1;
+                    });
+                });
+
+                let html = '';
+                allKnownVillages.forEach(v => {
+                    const isChecked = selectedVillagesSet.has(v);
+                    const cnt = vCounts[v] || 0;
+                    html += `
+                        <label class="village-chip ${isChecked ? 'selected' : ''}">
+                            <input type="checkbox" value="${v}" ${isChecked ? 'checked' : ''} onchange="onVillageChipChange('${v.replace(/'/g, "\\'")}', this.checked)">
+                            <span>${v}</span>
+                            <span class="v-count">${cnt} জন</span>
+                        </label>
+                    `;
+                });
+
+                grid.innerHTML = html;
+
+                // Update badge
+                const badge = document.getElementById('vSelectedCountBadge');
+                if (badge) {
+                    badge.textContent = `নির্বাচিত: ${selectedVillagesSet.size} / ${allKnownVillages.length} গ্রাম`;
+                }
+            }
+
+            function toggleAllVillages(selectAll) {
+                if (selectAll) {
+                    allKnownVillages.forEach(v => selectedVillagesSet.add(v));
+                    // Also select all students
+                    schoolsData.forEach(s => {
+                        (s.students || []).forEach(st => selectedVillageStudentIds.add(st.id));
+                    });
+                } else {
+                    selectedVillagesSet.clear();
+                    selectedVillageStudentIds.clear();
+                }
+
+                renderVillageChips();
+                renderVillageStudentList();
+                renderVillageA4Report();
+            }
+
+            function onVillageChipChange(vName, isChecked) {
+                if (isChecked) {
+                    selectedVillagesSet.add(vName);
+                    // auto-select students in this village
+                    schoolsData.forEach(s => {
+                        (s.students || []).forEach(st => {
+                            if ((st.village || 'অনির্ধারিত').trim() === vName) {
+                                selectedVillageStudentIds.add(st.id);
+                            }
+                        });
+                    });
+                } else {
+                    selectedVillagesSet.delete(vName);
+                    // unselect students in this village
+                    schoolsData.forEach(s => {
+                        (s.students || []).forEach(st => {
+                            if ((st.village || 'অনির্ধারিত').trim() === vName) {
+                                selectedVillageStudentIds.delete(st.id);
+                            }
+                        });
+                    });
+                }
+
+                renderVillageChips();
+                renderVillageStudentList();
+                renderVillageA4Report();
+            }
+
+            function getVillageFilteredStudents() {
+                const list = [];
+                schoolsData.forEach(s => {
+                    (s.students || []).forEach(st => {
+                        const v = (st.village || 'অনির্ধারিত').trim();
+                        if (selectedVillagesSet.has(v)) {
+                            list.push({
+                                ...st,
+                                school_num: s.num,
+                                school_name_bn: s.name_bn,
+                                school_name_en: s.name_en
+                            });
+                        }
+                    });
+                });
+                return list;
+            }
+
+            function renderVillageStudentList() {
+                const tbody = document.getElementById('villageStudentTbody');
+                if (!tbody) return;
+
+                const filtered = getVillageFilteredStudents();
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="10" style="text-align:center; padding:32px; color:#64748b;">
+                                কোনো গ্রাম নির্বাচন করা হয়নি অথবা এই গ্রামে কোনো শিক্ষার্থী নেই। অনুগ্রহ করে উপরের গ্রাম বক্সে টিক দিন।
+                            </td>
+                        </tr>
+                    `;
+                    updateVillageStudentSummary(0, 0);
+                    return;
+                }
+
+                let html = '';
+                let selectedInList = 0;
+
+                filtered.forEach((st, idx) => {
+                    const isChecked = selectedVillageStudentIds.has(st.id);
+                    if (isChecked) selectedInList++;
+
+                    html += `
+                        <tr style="background:${isChecked ? '#f0fdf4' : 'inherit'};">
+                            <td style="text-align:center;">
+                                <input type="checkbox" value="${st.id}" ${isChecked ? 'checked' : ''} onchange="toggleVillageStudent('${st.id}', this.checked)" style="width:16px; height:16px; cursor:pointer; accent-color:#16a34a;">
+                            </td>
+                            <td style="text-align:center; font-weight:600;">${idx + 1}</td>
+                            <td><strong style="color:#1e40af;">${st.id}</strong></td>
+                            <td>
+                                <div style="font-weight:700; color:#0f172a;">${st.name_bn || st.name}</div>
+                                ${st.name_bn && st.name !== st.name_bn ? `<div style="font-size:10px; color:#64748b;">${st.name}</div>` : ''}
+                            </td>
+                            <td>
+                                <span class="village-badge-cell">🏡 ${st.village || 'N/A'}</span>
+                            </td>
+                            <td style="font-size:12px;">${st.school_name_bn || ''}</td>
+                            <td style="text-align:center; font-weight:600;">${st.class_name ? 'শ্রেণি ' + st.class_name : 'N/A'}${st.sl ? ' (রোল ' + st.sl + ')' : ''}</td>
+                            <td style="font-size:12px;">
+                                <div>${st.father_name || st.mother_name || 'অভিভাবক'}</div>
+                                <div style="font-size:11px; color:#64748b;">${st.mobile || 'N/A'}</div>
+                            </td>
+                            <td style="text-align:center; font-weight:600; color:${st.gender === 'M' ? '#2563eb' : '#ec4899'};">
+                                ${st.gender === 'M' ? 'ছাত্র' : 'ছাত্রী'}
+                            </td>
+                            <td style="text-align:right; font-weight:600;">৳${st.income_bdt ? parseInt(st.income_bdt, 10).toLocaleString('bn-BD') : '০'}</td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+
+                // Update master checkbox
+                const masterCb = document.getElementById('vMasterStudentCb');
+                if (masterCb) {
+                    masterCb.checked = (filtered.length > 0 && selectedInList === filtered.length);
+                    masterCb.indeterminate = (selectedInList > 0 && selectedInList < filtered.length);
+                }
+
+                updateVillageStudentSummary(selectedInList, filtered.length);
+            }
+
+            function updateVillageStudentSummary(selectedCount, totalCount) {
+                const summary = document.getElementById('vStudentSelectedSummary');
+                if (summary) {
+                    summary.innerHTML = `📌 নির্বাচিত: <strong>${selectedCount} জন</strong> (${selectedVillagesSet.size} টি গ্রাম থেকে)`;
+                }
+            }
+
+            function toggleVillageStudent(stId, isChecked) {
+                if (isChecked) {
+                    selectedVillageStudentIds.add(stId);
+                } else {
+                    selectedVillageStudentIds.delete(stId);
+                }
+                renderVillageStudentList();
+                renderVillageA4Report();
+            }
+
+            function toggleAllVillageStudents(isChecked) {
+                const filtered = getVillageFilteredStudents();
+                filtered.forEach(st => {
+                    if (isChecked) {
+                        selectedVillageStudentIds.add(st.id);
+                    } else {
+                        selectedVillageStudentIds.delete(st.id);
+                    }
+                });
+
+                renderVillageStudentList();
+                renderVillageA4Report();
+            }
+
+            function renderVillageA4Report() {
+                const sheet = document.getElementById('villageTypeA4Sheet');
+                if (!sheet) return;
+
+                // Gather only the selected students
+                const allSt = [];
+                schoolsData.forEach(s => {
+                    (s.students || []).forEach(st => {
+                        if (selectedVillageStudentIds.has(st.id)) {
+                            allSt.push({
+                                ...st,
+                                school_name_bn: s.name_bn
+                            });
+                        }
+                    });
+                });
+
+                // Sort by village then student ID
+                allSt.sort((a,b) => {
+                    const va = (a.village || '').localeCompare(b.village || '');
+                    if (va !== 0) return va;
+                    return (a.id || '').localeCompare(b.id || '');
+                });
+
+                const totalSt = allSt.length;
+                const boys = allSt.filter(s => s.gender === 'M').length;
+                const girls = allSt.filter(s => s.gender === 'F').length;
+
+                // Unique villages in selected students
+                const activeVillages = Array.from(new Set(allSt.map(s => s.village || 'অনির্ধারিত')));
+
+                const logoSrc = document.querySelector('.home-hero-logo')?.src || '';
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                let html = `
+                    <div class="a4-report-header">
+                        <div class="a4-brand">
+                            ${logoSrc ? `<img src="${logoSrc}" alt="RSC" class="a4-logo">` : ''}
+                            <div class="a4-title-group">
+                                <h2>RIGHTS & SIGHT FOR CHILDREN (RSC)</h2>
+                                <h3>Sun Child Sponsorship Program (SCSP)</h3>
+                                <p style="font-weight:700; color:#065f46;">গ্রামভিত্তিক শিক্ষার্থী প্রতিবেদন (Village-Wise Student Report)</p>
+                                <p>টিকমার্ককৃত নির্বাচিত গ্রাম ও শিক্ষার্থীদের পূর্ণাঙ্গ প্রিন্ট তালিকা</p>
+                            </div>
+                        </div>
+                        <div class="a4-report-meta">
+                            <div><strong>প্রকল্প এলাকা:</strong> নীলফামারী</div>
+                            <div><strong>মুদ্রণ তারিখ:</strong> ${dateStr}</div>
+                            <div><strong>পেজ সাইজ:</strong> A4 (পোর্ট্রেট)</div>
+                        </div>
+                    </div>
+
+                    <div class="a4-summary-bar" style="background:#ecfdf5; border-color:#a7f3d0;">
+                        <span>🏡 অন্তর্ভুক্ত গ্রাম: <strong>${activeVillages.length} টি</strong></span>
+                        <span>📌 নির্বাচিত শিক্ষার্থী: <strong>${totalSt} জন</strong></span>
+                        <span style="color:#1d4ed8;">👦 ছাত্র: <strong>${boys} জন</strong></span>
+                        <span style="color:#be185d;">👧 ছাত্রী: <strong>${girls} জন</strong></span>
+                    </div>
+
+                    <div style="font-size:10px; color:#475569; margin-bottom:10px; line-height:1.4;">
+                        <strong>নির্বাচিত গ্রামসমূহ:</strong> ${activeVillages.join(', ') || 'কোনো গ্রাম নির্বাচন করা হয়নি'}
+                    </div>
+
+                    <table class="a4-table">
+                        <thead>
+                            <tr>
+                                <th style="width:28px; text-align:center;">ক্র.</th>
+                                <th style="width:75px;">আইডি</th>
+                                <th>শিক্ষার্থীর নাম</th>
+                                <th style="width:110px;">গ্রাম / এলাকা</th>
+                                <th>শিক্ষা প্রতিষ্ঠান</th>
+                                <th style="width:75px;">শ্রেণি ও রোল</th>
+                                <th>অভিভাবকের নাম</th>
+                                <th style="width:85px;">মোবাইল</th>
+                                <th style="text-align:center; width:40px;">লিঙ্গ</th>
+                                <th style="text-align:right; width:65px;">মাসিক আয়</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${allSt.length === 0 ? `
+                                <tr>
+                                    <td colspan="10" style="text-align:center; padding:28px; color:#64748b;">
+                                        কোনো শিক্ষার্থী নির্বাচিত হয়নি। অনুগ্রহ করে শিক্ষার্থীদের টিক দিন।
+                                    </td>
+                                </tr>
+                            ` : allSt.map((st, idx) => `
+                                <tr>
+                                    <td style="text-align:center; font-weight:600;">${idx + 1}</td>
+                                    <td><strong style="color:#1e3a8a;">${st.id}</strong></td>
+                                    <td>
+                                        <div style="font-weight:700;">${st.name_bn || st.name}</div>
+                                        ${st.name_bn && st.name !== st.name_bn ? `<div style="font-size:9px; color:#64748b;">${st.name}</div>` : ''}
+                                    </td>
+                                    <td>
+                                        <strong style="color:#065f46;">🏡 ${st.village || 'N/A'}</strong>
+                                    </td>
+                                    <td style="font-size:9.5px;">${st.school_name_bn || ''}</td>
+                                    <td>${st.class_name ? 'শ্রেণি ' + st.class_name : 'N/A'}${st.sl ? ' (' + st.sl + ')' : ''}</td>
+                                    <td style="font-size:9.5px;">${st.father_name || st.mother_name || 'অভিভাবক'}</td>
+                                    <td style="font-size:9.5px;">${st.mobile || 'N/A'}</td>
+                                    <td style="text-align:center; font-weight:600; color:${st.gender === 'M' ? '#1d4ed8' : '#be185d'};">
+                                        ${st.gender === 'M' ? 'ছাত্র' : 'ছাত্রী'}
+                                    </td>
+                                    <td style="text-align:right; font-weight:600;">৳${st.income_bdt ? parseInt(st.income_bdt, 10).toLocaleString('bn-BD') : '০'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="a4-signatures">
+                        <div class="a4-sig-block">
+                            প্রস্তুতকারীর স্বাক্ষর ও তারিখ
+                        </div>
+                        <div class="a4-sig-block">
+                            ফিল্ড অফিসার / সুপারভাইজার
+                        </div>
+                        <div class="a4-sig-block">
+                            প্রকল্প সমন্বয়কারী, RSC
+                        </div>
+                    </div>
+                `;
+
+                sheet.innerHTML = html;
+            }
+
+            // -------------------------------------------------------------
+            // UNIVERSAL A4 PRINTING ENGINE
+            // -------------------------------------------------------------
+            function printA4Report(sheetId) {
+                const sheet = document.getElementById(sheetId);
+                if (!sheet) {
+                    window.print();
+                    return;
+                }
+
+                let printArea = document.getElementById('activePrintSheetArea');
+                if (!printArea) {
+                    printArea = document.createElement('div');
+                    printArea.id = 'activePrintSheetArea';
+                    document.body.appendChild(printArea);
+                }
+
+                printArea.innerHTML = sheet.outerHTML;
+                document.body.classList.add('printing-report-a4');
+
+                window.print();
+
+                setTimeout(() => {
+                    document.body.classList.remove('printing-report-a4');
+                    if (printArea) printArea.innerHTML = '';
+                }, 1000);
+            }
+
+            function printActiveReportTab() {
+                if (currentReportSubOption === 'print') {
+                    printA4Report('printTypeA4Sheet');
+                } else if (currentReportSubOption === 'village') {
+                    printA4Report('villageTypeA4Sheet');
+                } else {
+                    window.print();
+                }
+            }
+
+            function exportActiveReportCsv() {
+                if (currentReportSubOption === 'print') {
+                    exportPrintTypeCsv();
+                } else if (currentReportSubOption === 'village') {
+                    exportVillageReportCsv();
+                } else {
+                    document.getElementById('exportCsvBtn')?.click();
+                }
+            }
+
+            function exportPrintTypeCsv() {
+                let matchedStudents = [];
+                schoolsData.forEach(s => {
+                    if (currentPrintSchool !== 'ALL' && s.num != currentPrintSchool) return;
+                    (s.students || []).forEach(st => {
+                        if (currentPrintGender !== 'ALL' && st.gender !== currentPrintGender) return;
+                        if (currentPrintClass !== 'ALL' && (st.class_name || '').trim() !== currentPrintClass) return;
+                        matchedStudents.push({ ...st, school_name_bn: s.name_bn });
+                    });
+                });
+
+                let csv = "\uFEFFSL,ID,Name_BN,Name_EN,Gender,Class,Roll,School,Village,Mobile,Father,Mother,Income_BDT\n";
+                matchedStudents.forEach((st, idx) => {
+                    csv += `"${idx+1}","${st.id}","${(st.name_bn||'').replace(/"/g, '""')}","${(st.name||'').replace(/"/g, '""')}","${st.gender}","${st.class_name||''}","${st.sl||''}","${(st.school_name_bn||'').replace(/"/g, '""')}","${(st.village||'').replace(/"/g, '""')}","${st.mobile||''}","${(st.father_name||'').replace(/"/g, '""')}","${(st.mother_name||'').replace(/"/g, '""')}","${st.income_bdt||''}"\n`;
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `RSC_Report_${currentPrintType}_A4_${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            function exportVillageReportCsv() {
+                const allSt = [];
+                schoolsData.forEach(s => {
+                    (s.students || []).forEach(st => {
+                        if (selectedVillageStudentIds.has(st.id)) {
+                            allSt.push({ ...st, school_name_bn: s.name_bn });
+                        }
+                    });
+                });
+
+                let csv = "\uFEFFSL,ID,Name_BN,Name_EN,Village,Gender,Class,Roll,School,Mobile,Father,Mother,Income_BDT\n";
+                allSt.forEach((st, idx) => {
+                    csv += `"${idx+1}","${st.id}","${(st.name_bn||'').replace(/"/g, '""')}","${(st.name||'').replace(/"/g, '""')}","${(st.village||'').replace(/"/g, '""')}","${st.gender}","${st.class_name||''}","${st.sl||''}","${(st.school_name_bn||'').replace(/"/g, '""')}","${st.mobile||''}","${(st.father_name||'').replace(/"/g, '""')}","${(st.mother_name||'').replace(/"/g, '""')}","${st.income_bdt||''}"\n`;
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `RSC_Village_Report_A4_${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // -------------------------------------------------------------
+            // OVERVIEW (ORIGINAL 4 TABLES)
+            // -------------------------------------------------------------
+            function renderReportsOverview() {
                 let totalStudents = 0, totalBoys = 0, totalGirls = 0;
                 let totalIncome = 0, countIncome = 0;
                 const villageStats = {};
