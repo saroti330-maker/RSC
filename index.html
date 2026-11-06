@@ -3967,28 +3967,10 @@
                 <section id="viewReports" class="app-view" style="display:none;">
                     <div class="container">
                         <!-- Reports Header Banner -->
-                        <div class="reports-header-card">
-                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-                                <div>
-                                    <div class="badge-project" style="margin-bottom: 6px;">
-                                        <span>📊</span> <span>বিশ্লেষণ, অনুসন্ধান ও A4 প্রিন্ট রিপোর্ট</span>
-                                    </div>
-                                    <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
-                                        প্রতিষ্ঠান, শিক্ষার্থী ও গ্রাম রিপোর্ট
-                                    </h1>
-                                    <p style="font-size: 13.5px; color: var(--gray-600);">
-                                        A4 প্রিন্টিং টাইপ (School, Student, Class) এবং গ্রামভিত্তিক শিক্ষার্থী তালিকা ও টিকমার্ক অপশন।
-                                    </p>
-                                </div>
-                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                    <button type="button" class="btn btn-secondary" onclick="printActiveReportTab()">
-                                        <span>🖨️</span> <span>প্রিন্ট (A4)</span>
-                                    </button>
-                                    <button type="button" class="btn btn-primary" onclick="exportActiveReportCsv()">
-                                        <span>📥</span> <span>এক্সেল</span>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="reports-header-card" style="padding: 16px 24px; margin-bottom: 18px;">
+                            <h1 style="font-size: 22px; font-weight: 800; color: #0f172a; margin: 0;">
+                                প্রতিষ্ঠান, শিক্ষার্থী ও গ্রাম রিপোর্ট
+                            </h1>
                         </div>
 
                         <!-- Sub-Options Navigation Bar -->
@@ -7231,13 +7213,11 @@
                                 <h2>RIGHTS & SIGHT FOR CHILDREN (RSC)</h2>
                                 <h3>Sun Child Sponsorship Program (SCSP)</h3>
                                 <p style="font-weight:700; color:#1e40af;">${reportTitle}</p>
-                                <p>${reportSubtitle}</p>
                             </div>
                         </div>
                         <div class="a4-report-meta">
                             <div><strong>প্রকল্প এলাকা:</strong> নীলফামারী</div>
                             <div><strong>মুদ্রণ তারিখ:</strong> ${dateStr}</div>
-                            <div><strong>পেজ সাইজ:</strong> A4 (${printOrientation === 'landscape' ? 'ল্যান্ডস্কেপ' : 'পোর্ট্রেট'})</div>
                         </div>
                     </div>
 
@@ -7581,13 +7561,11 @@
                                 <h2>RIGHTS & SIGHT FOR CHILDREN (RSC)</h2>
                                 <h3>Sun Child Sponsorship Program (SCSP)</h3>
                                 <p style="font-weight:700; color:#065f46;">গ্রামভিত্তিক শিক্ষার্থী প্রতিবেদন (Village-Wise Student Report)</p>
-                                <p>টিকমার্ককৃত নির্বাচিত গ্রাম ও শিক্ষার্থীদের পূর্ণাঙ্গ প্রিন্ট তালিকা</p>
                             </div>
                         </div>
                         <div class="a4-report-meta">
                             <div><strong>প্রকল্প এলাকা:</strong> নীলফামারী</div>
                             <div><strong>মুদ্রণ তারিখ:</strong> ${dateStr}</div>
-                            <div><strong>পেজ সাইজ:</strong> A4 (পোর্ট্রেট)</div>
                         </div>
                     </div>
 
