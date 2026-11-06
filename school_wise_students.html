@@ -3117,6 +3117,70 @@
             color: var(--gray-600);
         }
 
+        .setting-subnav-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .setting-subnav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--gray-600);
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .setting-subnav-btn:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--gray-900);
+        }
+
+        .setting-subnav-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-outline-danger {
+            background: transparent;
+            border: 1px solid #fca5a5;
+            color: #dc2626;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
+
+        .btn-outline-secondary {
+            background: transparent;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-600);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--gray-100);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .app-sidebar {
@@ -4235,12 +4299,100 @@
                                 <span>⚙️</span> <span>সিস্টেম সেটিংস</span>
                             </div>
                             <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">সেটিংস ও ডাটাবেজ</h1>
-                            <p style="font-size: 13.5px; color: var(--gray-600);">পাসওয়ার্ড পরিবর্তন, ডাটাবেজ ব্যাকআপ ও রিস্টোর।</p>
+                            <p style="font-size: 13.5px; color: var(--gray-600);">বিদ্যালয় ও শ্রেণি ব্যবস্থাপনা, পাসওয়ার্ড পরিবর্তন, ডাটাবেজ ব্যাকআপ ও রিস্টোর।</p>
                         </div>
 
-                        <div class="setting-cards-grid">
-                            <!-- Card 1: User & Password Change -->
-                            <div class="setting-card">
+                        <!-- Settings Sub-Navigation Tabs -->
+                        <div class="setting-subnav-bar">
+                            <button type="button" class="setting-subnav-btn active" id="btnSubnavSchool" onclick="switchSettingSubTab('school')">
+                                <span>🏫</span> <span>বিদ্যালয় ও শ্রেণি ব্যবস্থাপনা</span>
+                            </button>
+                            <button type="button" class="setting-subnav-btn" id="btnSubnavPassword" onclick="switchSettingSubTab('password')">
+                                <span>🔑</span> <span>পাসওয়ার্ড পরিবর্তন</span>
+                            </button>
+                            <button type="button" class="setting-subnav-btn" id="btnSubnavDatabase" onclick="switchSettingSubTab('database')">
+                                <span>💾</span> <span>ডাটাবেজ ও ক্লাউড সিঙ্ক</span>
+                            </button>
+                            <button type="button" class="setting-subnav-btn" id="btnSubnavAbout" onclick="switchSettingSubTab('about')">
+                                <span>🏢</span> <span>প্রজেক্ট পরিচিতি</span>
+                            </button>
+                        </div>
+
+                        <!-- SUBTAB 1: School & Class Management -->
+                        <div id="subtabSchool" class="setting-subtab-pane">
+                            <div class="setting-card" style="margin-bottom: 20px;">
+                                <!-- Toggle Sub-Options: Schools vs Classes -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-200);">
+                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                        <button type="button" class="btn btn-primary" id="btnSchoolViewTab" onclick="switchSchoolManageTab('schools')" style="font-size: 13.5px; padding: 7px 16px;">
+                                            <span>🏫</span> <span>বিদ্যালয় তালিকা ও নাম ব্যবস্থাপনা</span>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" id="btnClassViewTab" onclick="switchSchoolManageTab('classes')" style="font-size: 13.5px; padding: 7px 16px;">
+                                            <span>📚</span> <span>বিদ্যালয় অনুসারে শ্রেণি ব্যবস্থাপনা</span>
+                                        </button>
+                                    </div>
+                                    <div id="schoolActionBtnArea">
+                                        <button type="button" class="btn btn-primary" onclick="openAddSchoolModal()" style="font-size: 13.5px; padding: 7px 16px; background: #16a34a; border-color: #16a34a;">
+                                            <span>➕</span> <span>নতুন বিদ্যালয় যুক্ত করুন</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Pane A: Schools Management (Add, Edit Name, Delete) -->
+                                <div id="paneSchoolsManage">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                                        <div>
+                                            <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">সকল নিবন্ধিত শিক্ষা প্রতিষ্ঠান</h3>
+                                            <p style="font-size: 12px; color: var(--gray-500); margin: 2px 0 0 0;">বিদ্যালয়ের নাম আপডেট করুন বা নতুন প্রতিষ্ঠান যুক্ত করুন। শিক্ষার্থী যুক্ত থাকলে ডিলিট করা যাবে না।</p>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="text" id="settingSchoolSearchInput" class="form-input" placeholder="🔍 বিদ্যালয় খুঁজুন..." style="max-width: 240px; font-size: 13px; padding: 6px 12px;" oninput="renderSchoolManageSection()">
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--gray-200); border-radius: 8px;">
+                                        <table class="report-table" id="settingSchoolsTable" style="width: 100%; margin: 0;">
+                                            <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 2;">
+                                                <tr>
+                                                    <th style="width: 50px; text-align: center;">নং</th>
+                                                    <th>বিদ্যালয়ের নাম (বাংলা)</th>
+                                                    <th>বিদ্যালয়ের নাম (English)</th>
+                                                    <th style="text-align: center;">অনুমোদিত শ্রেণি সমূহ</th>
+                                                    <th style="text-align: center; width: 100px;">শিক্ষার্থী</th>
+                                                    <th style="text-align: center; width: 180px;">অ্যাকশন</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="settingSchoolsTbody">
+                                                <!-- Populated dynamically -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Pane B: Classes per School Management -->
+                                <div id="paneClassesManage" style="display: none;">
+                                    <div style="background: #f8fafc; border: 1px solid var(--gray-200); border-radius: 8px; padding: 16px; margin-bottom: 18px;">
+                                        <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+                                            <label for="classManageSchoolSelect" style="font-weight: 700; color: #0f172a; font-size: 14px; min-width: 140px;">
+                                                🏫 বিদ্যালয় নির্বাচন করুন:
+                                            </label>
+                                            <select id="classManageSchoolSelect" class="form-input" style="max-width: 420px; font-weight: 600; color: #1e40af;" onchange="renderSchoolClassManager()">
+                                                <!-- Populated dynamically -->
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Selected School Class Controls -->
+                                    <div id="selectedSchoolClassContent">
+                                        <!-- Populated dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUBTAB 2: Password Management -->
+                        <div id="subtabPassword" class="setting-subtab-pane" style="display:none;">
+                            <div class="setting-card" style="max-width: 600px;">
                                 <div class="setting-card-header">
                                     <span class="setting-card-icon">🔑</span>
                                     <div>
@@ -4280,9 +4432,11 @@
                                     </form>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Card 2: Database File Management -->
-                            <div class="setting-card">
+                        <!-- SUBTAB 3: Database & Cloud Backup -->
+                        <div id="subtabDatabase" class="setting-subtab-pane" style="display:none;">
+                            <div class="setting-card" style="max-width: 650px;">
                                 <div class="setting-card-header">
                                     <span class="setting-card-icon">💾</span>
                                     <div>
@@ -4345,9 +4499,11 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Card 3: System & Project Info -->
-                            <div class="setting-card" style="grid-column: 1 / -1;">
+                        <!-- SUBTAB 4: Project Info -->
+                        <div id="subtabAbout" class="setting-subtab-pane" style="display:none;">
+                            <div class="setting-card">
                                 <div class="setting-card-header">
                                     <span class="setting-card-icon">🏢</span>
                                     <div>
@@ -4510,14 +4666,21 @@
                                     <div class="form-group" style="grid-column: span 2;">
                                         <label for="fSchoolNum">শিক্ষা প্রতিষ্ঠান নির্বাচন করুন <span
                                                 class="req">*</span></label>
-                                        <select id="fSchoolNum" class="form-control" required>
+                                        <select id="fSchoolNum" class="form-control" required onchange="handleFormSchoolChange()">
                                             <!-- Populated dynamically -->
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="fClass">শ্রেণী (Class) <span class="req">*</span></label>
-                                        <input type="text" id="fClass" class="form-control" placeholder="যেমন: 5, 8, 10"
-                                            required>
+                                        <label for="fClassSelect">শ্রেণী (Class) <span class="req">*</span></label>
+                                        <div style="display: flex; gap: 6px;">
+                                            <select id="fClassSelect" class="form-control" required onchange="document.getElementById('fClass').value = this.value;">
+                                                <!-- Populated dynamically based on selected school -->
+                                            </select>
+                                            <button type="button" class="btn btn-secondary" onclick="quickAddClassInForm()" title="এই বিদ্যালয়ে দ্রুত নতুন শ্রেণি যোগ করুন" style="padding: 4px 10px; font-size: 13px; font-weight: 700; white-space: nowrap;">
+                                                ➕
+                                            </button>
+                                        </div>
+                                        <input type="hidden" id="fClass" value="">
                                     </div>
                                 </div>
                             </div>
@@ -4707,6 +4870,69 @@
                                 onclick="closeChangePasswordModal()">বাতিল</button>
                             <button type="submit" class="btn btn-primary">
                                 <span>💾</span> <span>সংরক্ষণ করুন</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal: Add New School -->
+            <div id="addSchoolModal" class="modal-overlay" onclick="closeAddSchoolModalOnOutside(event)">
+                <div class="modal-content" style="max-width: 540px;" onclick="event.stopPropagation()">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #1e40af, #2563eb); color: white;">
+                        <h3 style="margin:0; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                            <span>🏫</span> <span>নতুন বিদ্যালয় যুক্ত করুন</span>
+                        </h3>
+                        <button type="button" class="modal-close" style="color:white; font-size: 20px; cursor: pointer; background: transparent; border: none;" onclick="closeAddSchoolModal()">&times;</button>
+                    </div>
+                    <form onsubmit="handleSaveNewSchool(event)" style="padding: 20px;">
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="newSchoolNameBn">বিদ্যালয়ের নাম (বাংলা) <span class="req">*</span></label>
+                            <input type="text" id="newSchoolNameBn" class="form-input" required placeholder="যেমন: জলঢাকা আইডিয়াল হাই স্কুল">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="newSchoolNameEn">বিদ্যালয়ের নাম (English) <span class="req">*</span></label>
+                            <input type="text" id="newSchoolNameEn" class="form-input" required placeholder="e.g. Jaldhaka Ideal High School">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label">প্রাথমিক শ্রেণি সমূহ নির্বাচন করুন:</label>
+                            <div id="newSchoolClassesCheckboxes" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; max-height: 140px; overflow-y: auto; padding: 10px; border: 1px solid var(--gray-200); border-radius: 6px; background: #f8fafc;">
+                                <!-- Checkboxes populated dynamically -->
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button type="button" class="btn btn-secondary" onclick="closeAddSchoolModal()">বাতিল</button>
+                            <button type="submit" class="btn btn-primary" style="background: #16a34a; border-color: #16a34a;">
+                                <span>💾</span> <span>বিদ্যালয় সংরক্ষণ করুন</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal: Edit School Name -->
+            <div id="editSchoolModal" class="modal-overlay" onclick="closeEditSchoolModalOnOutside(event)">
+                <div class="modal-content" style="max-width: 520px;" onclick="event.stopPropagation()">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: white;">
+                        <h3 style="margin:0; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                            <span>✏️</span> <span>বিদ্যালয়ের নাম আপডেট করুন</span>
+                        </h3>
+                        <button type="button" class="modal-close" style="color:white; font-size: 20px; cursor: pointer; background: transparent; border: none;" onclick="closeEditSchoolModal()">&times;</button>
+                    </div>
+                    <form onsubmit="handleUpdateSchoolName(event)" style="padding: 20px;">
+                        <input type="hidden" id="editSchoolNum" value="">
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="editSchoolNameBn">বিদ্যালয়ের নাম (বাংলা) <span class="req">*</span></label>
+                            <input type="text" id="editSchoolNameBn" class="form-input" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 18px;">
+                            <label class="form-label" for="editSchoolNameEn">বিদ্যালয়ের নাম (English) <span class="req">*</span></label>
+                            <input type="text" id="editSchoolNameEn" class="form-input" required>
+                        </div>
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button type="button" class="btn btn-secondary" onclick="closeEditSchoolModal()">বাতিল</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span>💾</span> <span>নাম আপডেট সংরক্ষণ করুন</span>
                             </button>
                         </div>
                     </form>
@@ -5618,6 +5844,23 @@
                 return gender;
             }
 
+            const STANDARD_CLASS_ORDER = [
+                'Play', 'Nursery', 'KG', 'One', 'Two', 'Three', 'Four', 'Five',
+                'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Alim'
+            ];
+
+            function sortClassNames(classList) {
+                if (!Array.isArray(classList)) return [];
+                return Array.from(new Set(classList.map(c => formatClassName(c)).filter(Boolean))).sort((a, b) => {
+                    const idxA = STANDARD_CLASS_ORDER.indexOf(a);
+                    const idxB = STANDARD_CLASS_ORDER.indexOf(b);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.localeCompare(b, 'bn');
+                });
+            }
+
             function normalizeStudentClass(st) {
                 if (!st) return;
                 if (st.class_name) {
@@ -5628,7 +5871,16 @@
             function normalizeAllStudents(data) {
                 if (!Array.isArray(data)) return data;
                 data.forEach(s => {
-                    (s.students || []).forEach(st => normalizeStudentClass(st));
+                    s.students = s.students || [];
+                    s.students.forEach(st => normalizeStudentClass(st));
+
+                    const studentClasses = s.students.map(st => formatClassName(st.class_name)).filter(Boolean);
+                    let existingClasses = Array.isArray(s.classes) ? s.classes.map(c => formatClassName(c)) : [];
+                    let combined = Array.from(new Set([...existingClasses, ...studentClasses]));
+                    if (combined.length === 0) {
+                        combined = ['One', 'Two', 'Three', 'Four', 'Five'];
+                    }
+                    s.classes = sortClassNames(combined);
                 });
                 return data;
             }
@@ -5908,7 +6160,7 @@
                 const formSchoolSelect = document.getElementById('fSchoolNum');
                 const currentSelectedFilter = schoolFilter.value || 'ALL';
 
-                let filterHtml = '<option value="ALL">সকল বিদ্যালয় (১৯টি)</option>';
+                let filterHtml = `<option value="ALL">সকল বিদ্যালয় (${schoolsData.length}টি)</option>`;
                 let formOptionsHtml = '';
 
                 schoolsData.forEach(s => {
@@ -5917,6 +6169,19 @@
                 });
                 schoolFilter.innerHTML = filterHtml;
                 formSchoolSelect.innerHTML = formOptionsHtml;
+
+                const classManageSelect = document.getElementById('classManageSchoolSelect');
+                if (classManageSelect) {
+                    const prevVal = classManageSelect.value;
+                    let cOptHtml = '';
+                    schoolsData.forEach(s => {
+                        cOptHtml += `<option value="${s.num}">#${String(s.num).padStart(2, '0')}. ${s.name_bn} (${s.name_en})</option>`;
+                    });
+                    classManageSelect.innerHTML = cOptHtml;
+                    if (prevVal && schoolsData.some(s => String(s.num) === String(prevVal))) {
+                        classManageSelect.value = prevVal;
+                    }
+                }
 
                 // 3. Populate Class Filter
                 const classFilter = document.getElementById('classFilter');
@@ -6428,6 +6693,7 @@
 
                 document.getElementById('studentDataForm').reset();
                 document.getElementById('fSchoolNum').value = defaultSchoolNum;
+                handleFormSchoolChange();
                 document.getElementById('fId').value = generateNextStudentId();
                 document.getElementById('fId').readOnly = false;
                 document.getElementById('fProjectArea').value = 'Nilphamari';
@@ -6454,11 +6720,15 @@
                 document.getElementById('fSubmitBtn').textContent = '💾 আপডেট সংরক্ষণ করুন';
 
                 document.getElementById('fSchoolNum').value = st.school_num;
+                const formattedClass = formatClassName(st.class_name);
+                handleFormSchoolChange(formattedClass);
                 document.getElementById('fId').value = st.id;
                 document.getElementById('fId').readOnly = true;
                 document.getElementById('fName').value = st.name || '';
                 document.getElementById('fGender').value = st.gender.toUpperCase();
-                document.getElementById('fClass').value = st.class_name || '';
+                document.getElementById('fClass').value = formattedClass;
+                const classSelEl = document.getElementById('fClassSelect');
+                if (classSelEl) classSelEl.value = formattedClass;
                 document.getElementById('fDob').value = st.dob || '';
                 document.getElementById('fDisability').value = st.disability || 'N/A';
 
@@ -6511,7 +6781,13 @@
                 const studentId = document.getElementById('fId').value.trim();
                 const studentName = document.getElementById('fName').value.trim();
                 const gender = document.getElementById('fGender').value;
-                const className = document.getElementById('fClass').value.trim();
+                const classSel = document.getElementById('fClassSelect');
+                const rawClass = classSel && classSel.value ? classSel.value.trim() : (document.getElementById('fClass').value.trim() || '');
+                if (!rawClass) {
+                    alert('অনুগ্রহ করে শিক্ষার্থীর শ্রেণি (Class) নির্বাচন করুন।');
+                    return;
+                }
+                const className = formatClassName(rawClass);
                 const dob = document.getElementById('fDob').value.trim();
                 const disability = document.getElementById('fDisability').value.trim() || 'N/A';
 
@@ -6584,6 +6860,12 @@
                         source_file: 'Manual Entry'
                     };
 
+                    if (!schoolObj.classes) schoolObj.classes = [];
+                    if (!schoolObj.classes.some(c => formatClassName(c) === className)) {
+                        schoolObj.classes.push(className);
+                        schoolObj.classes = sortClassNames(schoolObj.classes);
+                    }
+
                     schoolObj.students.push(newStudent);
                     saveData();
                     closeFormModal();
@@ -6607,6 +6889,12 @@
                     if (!targetStudent) {
                         alert('শিক্ষার্থী খুঁজে পাওয়া যায়নি!');
                         return;
+                    }
+
+                    if (!schoolObj.classes) schoolObj.classes = [];
+                    if (!schoolObj.classes.some(c => formatClassName(c) === className)) {
+                        schoolObj.classes.push(className);
+                        schoolObj.classes = sortClassNames(schoolObj.classes);
                     }
 
                     targetStudent.name = studentName;
@@ -7964,6 +8252,9 @@
                 const creds = getAuthCredentials();
                 const userInp = document.getElementById('settingNewUserId');
                 if (userInp) userInp.value = creds.user;
+
+                renderSchoolManageSection();
+                renderSchoolClassManager();
             }
 
             function handleSettingPasswordSubmit(e) {
@@ -8017,6 +8308,519 @@
                 err.style.display = 'none';
 
                 showToast('ইউজার আইডি ও পাসওয়ার্ড সফলভাবে আপডেট হয়েছে!', '🔑');
+            }
+
+            // ==========================================
+            // SETTINGS: SCHOOL & CLASS MANAGEMENT
+            // ==========================================
+
+            function switchSettingSubTab(tabName) {
+                const tabs = ['school', 'password', 'database', 'about'];
+                tabs.forEach(t => {
+                    const btn = document.getElementById('btnSubnav' + t.charAt(0).toUpperCase() + t.slice(1));
+                    const pane = document.getElementById('subtab' + t.charAt(0).toUpperCase() + t.slice(1));
+                    if (btn) {
+                        if (t === tabName) btn.classList.add('active');
+                        else btn.classList.remove('active');
+                    }
+                    if (pane) {
+                        pane.style.display = (t === tabName ? 'block' : 'none');
+                    }
+                });
+
+                if (tabName === 'school') {
+                    renderSchoolManageSection();
+                    renderSchoolClassManager();
+                }
+            }
+
+            function switchSchoolManageTab(tab) {
+                const btnSchools = document.getElementById('btnSchoolViewTab');
+                const btnClasses = document.getElementById('btnClassViewTab');
+                const paneSchools = document.getElementById('paneSchoolsManage');
+                const paneClasses = document.getElementById('paneClassesManage');
+                const actionBtn = document.getElementById('schoolActionBtnArea');
+
+                if (tab === 'schools') {
+                    if (btnSchools) btnSchools.className = 'btn btn-primary';
+                    if (btnClasses) btnClasses.className = 'btn btn-secondary';
+                    if (paneSchools) paneSchools.style.display = 'block';
+                    if (paneClasses) paneClasses.style.display = 'none';
+                    if (actionBtn) actionBtn.style.display = 'block';
+                    renderSchoolManageSection();
+                } else {
+                    if (btnSchools) btnSchools.className = 'btn btn-secondary';
+                    if (btnClasses) btnClasses.className = 'btn btn-primary';
+                    if (paneSchools) paneSchools.style.display = 'none';
+                    if (paneClasses) paneClasses.style.display = 'block';
+                    if (actionBtn) actionBtn.style.display = 'none';
+                    renderSchoolClassManager();
+                }
+            }
+
+            function renderSchoolManageSection() {
+                const tbody = document.getElementById('settingSchoolsTbody');
+                if (!tbody) return;
+
+                const q = (document.getElementById('settingSchoolSearchInput')?.value || '').trim().toLowerCase();
+
+                let filtered = schoolsData;
+                if (q) {
+                    filtered = schoolsData.filter(s =>
+                        (s.name_bn && s.name_bn.toLowerCase().includes(q)) ||
+                        (s.name_en && s.name_en.toLowerCase().includes(q)) ||
+                        String(s.num).includes(q)
+                    );
+                }
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px; color: var(--gray-500);">কোনো বিদ্যালয় পাওয়া যায়নি।</td></tr>`;
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(s => {
+                    const studentCount = (s.students || []).length;
+                    const classes = s.classes || [];
+                    const classBadges = classes.slice(0, 5).map(c => `<span class="class-pill" style="margin: 2px;">${formatClassName(c)}</span>`).join('') +
+                        (classes.length > 5 ? ` <span style="font-size: 11px; color: var(--gray-500);">+${classes.length - 5}টি</span>` : '');
+
+                    const canDelete = (studentCount === 0);
+
+                    html += `
+                        <tr>
+                            <td style="text-align: center; font-weight: 700; color: #64748b;">#${String(s.num).padStart(2, '0')}</td>
+                            <td style="font-weight: 700; color: #0f172a;">${s.name_bn}</td>
+                            <td style="color: var(--gray-600); font-size: 13px;">${s.name_en}</td>
+                            <td style="text-align: center;">${classBadges || '<span style="color:var(--gray-400); font-size: 12px;">শ্রেণি নেই</span>'}</td>
+                            <td style="text-align: center; font-weight: 700; color: ${studentCount > 0 ? '#1e40af' : '#94a3b8'};">
+                                ${studentCount} জন
+                            </td>
+                            <td style="text-align: center;">
+                                <div style="display: inline-flex; gap: 6px;">
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="openEditSchoolModal(${s.num})" title="নাম পরিবর্তন করুন" style="padding: 4px 10px; font-size: 12px;">
+                                        ✏️ নাম আপডেট
+                                    </button>
+                                    <button type="button" class="btn btn-sm ${canDelete ? 'btn-outline-danger' : 'btn-outline-secondary'}" 
+                                        onclick="handleDeleteSchool(${s.num})" 
+                                        title="${canDelete ? 'বিদ্যালয় ডিলিট করুন' : 'শিক্ষার্থী যুক্ত থাকায় ডিলিট করা যাবে না'}" 
+                                        style="padding: 4px 10px; font-size: 12px; ${!canDelete ? 'opacity: 0.6; cursor: not-allowed;' : ''}">
+                                        🗑️ ডিলিট
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+            }
+
+            function renderSchoolClassManager() {
+                const schoolSelect = document.getElementById('classManageSchoolSelect');
+                if (!schoolSelect) return;
+                const schoolNum = parseInt(schoolSelect.value, 10);
+                const school = schoolsData.find(s => s.num === schoolNum) || schoolsData[0];
+                const container = document.getElementById('selectedSchoolClassContent');
+                if (!container) return;
+
+                if (!school) {
+                    container.innerHTML = `<div style="text-align:center; padding: 30px; color: var(--gray-500);">অনুগ্রহ করে একটি বিদ্যালয় নির্বাচন করুন।</div>`;
+                    return;
+                }
+
+                if (schoolSelect.value !== String(school.num)) {
+                    schoolSelect.value = school.num;
+                }
+
+                const studentCount = (school.students || []).length;
+                const classes = school.classes || [];
+
+                let html = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px 16px; border-radius: 8px;">
+                        <div>
+                            <div style="font-size: 15px; font-weight: 700; color: #1e3a8a;">
+                                #${String(school.num).padStart(2, '0')}. ${school.name_bn}
+                            </div>
+                            <div style="font-size: 12px; color: #3b82f6;">${school.name_en} • মোট শিক্ষার্থী: <strong>${studentCount}</strong> জন</div>
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <select id="newClassSelect" class="form-input" style="font-size: 13px; padding: 6px 10px; width: 170px;" onchange="handleNewClassSelectChange()">
+                                <option value="">-- শ্রেণি বেছে নিন --</option>
+                                <option value="Play">Play</option>
+                                <option value="Nursery">Nursery</option>
+                                <option value="KG">KG</option>
+                                <option value="One">One</option>
+                                <option value="Two">Two</option>
+                                <option value="Three">Three</option>
+                                <option value="Four">Four</option>
+                                <option value="Five">Five</option>
+                                <option value="Six">Six</option>
+                                <option value="Seven">Seven</option>
+                                <option value="Eight">Eight</option>
+                                <option value="Nine">Nine</option>
+                                <option value="Ten">Ten</option>
+                                <option value="Eleven">Eleven</option>
+                                <option value="Twelve">Twelve</option>
+                                <option value="Alim">Alim</option>
+                                <option value="__CUSTOM__">✍️ অন্য শ্রেণি লিখুন...</option>
+                            </select>
+                            <input type="text" id="newClassCustomInput" class="form-input" placeholder="শ্রেণির নাম" style="font-size: 13px; padding: 6px 10px; width: 130px; display: none;">
+                            <button type="button" class="btn btn-primary" onclick="handleAddClassToSchool()" style="font-size: 13px; padding: 6px 14px;">
+                                <span>➕</span> <span>শ্রেণি যুক্ত করুন</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 12px; font-size: 13px; font-weight: 700; color: #334155;">
+                        অনুমোদিত শ্রেণি তালিকা (মোট ${classes.length}টি শ্রেণি):
+                    </div>
+                `;
+
+                if (classes.length === 0) {
+                    html += `
+                        <div style="background: #fff; border: 1px dashed var(--gray-300); border-radius: 8px; padding: 30px; text-align: center; color: var(--gray-500);">
+                            এই বিদ্যালয়ে এখনও কোনো শ্রেণি যুক্ত করা হয়নি। উপরের অপশন ব্যবহার করে শ্রেণি যোগ করুন।
+                        </div>
+                    `;
+                } else {
+                    html += `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">`;
+                    classes.forEach(cls => {
+                        const enrolled = (school.students || []).filter(st => formatClassName(st.class_name) === formatClassName(cls)).length;
+                        const canDelete = (enrolled === 0);
+                        html += `
+                            <div style="background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                                <div>
+                                    <div style="font-weight: 700; color: #0f172a; font-size: 14px;">${formatClassName(cls)}</div>
+                                    <div style="font-size: 11.5px; color: ${enrolled > 0 ? '#0284c7' : 'var(--gray-500)'}; margin-top: 2px;">
+                                        ${enrolled > 0 ? `👥 শিক্ষার্থী: <strong>${enrolled} জন</strong>` : '⚪ শিক্ষার্থী নেই'}
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-sm ${canDelete ? 'btn-outline-danger' : 'btn-outline-secondary'}" 
+                                        onclick="handleDeleteClassFromSchool(${school.num}, '${cls}')" 
+                                        title="${canDelete ? 'শ্রেণিটি ডিলিট করুন' : 'এই শ্রেণিতে শিক্ষার্থী ভর্তি থাকায় ডিলিট করা যাবে না'}"
+                                        style="padding: 4px 8px; font-size: 12px; ${!canDelete ? 'opacity: 0.6; cursor: not-allowed;' : ''}">
+                                        🗑️ ডিলিট
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                container.innerHTML = html;
+            }
+
+            function handleNewClassSelectChange() {
+                const sel = document.getElementById('newClassSelect');
+                const inp = document.getElementById('newClassCustomInput');
+                if (sel && inp) {
+                    if (sel.value === '__CUSTOM__') {
+                        inp.style.display = 'inline-block';
+                        inp.focus();
+                    } else {
+                        inp.style.display = 'none';
+                    }
+                }
+            }
+
+            function handleAddClassToSchool() {
+                const schoolSelect = document.getElementById('classManageSchoolSelect');
+                if (!schoolSelect) return;
+                const schoolNum = parseInt(schoolSelect.value, 10);
+                const school = schoolsData.find(s => s.num === schoolNum);
+                if (!school) {
+                    alert('অনুগ্রহ করে একটি বিদ্যালয় নির্বাচন করুন।');
+                    return;
+                }
+
+                const sel = document.getElementById('newClassSelect');
+                let clsName = sel.value;
+                if (clsName === '__CUSTOM__') {
+                    clsName = document.getElementById('newClassCustomInput').value.trim();
+                }
+
+                if (!clsName) {
+                    alert('অনুগ্রহ করে শ্রেণির নাম নির্বাচন করুন বা লিখুন।');
+                    return;
+                }
+
+                const formatted = formatClassName(clsName);
+                if (!school.classes) school.classes = [];
+                if (school.classes.some(c => formatClassName(c) === formatted)) {
+                    alert(`"${formatted}" শ্রেণিটি ইতিমধ্যে এই বিদ্যালয়ে যুক্ত রয়েছে!`);
+                    return;
+                }
+
+                school.classes.push(formatted);
+                school.classes = sortClassNames(school.classes);
+
+                saveData();
+                renderApp();
+                renderSchoolClassManager();
+                sel.value = '';
+                document.getElementById('newClassCustomInput').value = '';
+                document.getElementById('newClassCustomInput').style.display = 'none';
+                showToast(`"${formatted}" শ্রেণিটি সফলভাবে যুক্ত হয়েছে!`, '✅');
+            }
+
+            function handleDeleteClassFromSchool(schoolNum, className) {
+                const school = schoolsData.find(s => s.num === schoolNum);
+                if (!school) {
+                    alert('বিদ্যালয় খুঁজে পাওয়া যায়নি!');
+                    return;
+                }
+
+                const formattedCls = formatClassName(className);
+                const enrolled = (school.students || []).filter(st => formatClassName(st.class_name) === formattedCls).length;
+
+                // VALIDATION: CANNOT DELETE IF CLASS HAS STUDENTS
+                if (enrolled > 0) {
+                    alert(`⚠️ ডিলিট করা সম্ভব নয়!\n\n"${school.name_bn}" এর "${formattedCls}" শ্রেণিতে বর্তমানে ${enrolled} জন শিক্ষার্থী ভর্তি রয়েছে।\n\nনিয়ম অনুযায়ী: কোনো শ্রেণির অধীনে শিক্ষার্থী এন্ট্রি করা থাকলে উক্ত শ্রেণি ডিলিট করা যাবে না।`);
+                    return;
+                }
+
+                if (!confirm(`আপনি কি "${school.name_bn}" বিদ্যালয় থেকে "${formattedCls}" শ্রেণিটি ডিলিট করতে চান?`)) {
+                    return;
+                }
+
+                school.classes = (school.classes || []).filter(c => formatClassName(c) !== formattedCls);
+                saveData();
+                renderApp();
+                renderSchoolClassManager();
+                showToast(`"${formattedCls}" শ্রেণিটি সফলভাবে ডিলিট করা হয়েছে!`, '🗑️');
+            }
+
+            function openAddSchoolModal() {
+                const modal = document.getElementById('addSchoolModal');
+                if (!modal) return;
+                document.getElementById('newSchoolNameBn').value = '';
+                document.getElementById('newSchoolNameEn').value = '';
+
+                // Populate checkboxes
+                const cbContainer = document.getElementById('newSchoolClassesCheckboxes');
+                if (cbContainer) {
+                    const standard = ['Play', 'Nursery', 'KG', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+                    const defaultChecked = ['One', 'Two', 'Three', 'Four', 'Five'];
+                    let cbHtml = '';
+                    standard.forEach(cls => {
+                        const checked = defaultChecked.includes(cls) ? 'checked' : '';
+                        cbHtml += `
+                            <label style="display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; background: white; padding: 4px 8px; border-radius: 4px; border: 1px solid var(--gray-200); cursor: pointer;">
+                                <input type="checkbox" value="${cls}" ${checked}> ${cls}
+                            </label>
+                        `;
+                    });
+                    cbContainer.innerHTML = cbHtml;
+                }
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeAddSchoolModal() {
+                const modal = document.getElementById('addSchoolModal');
+                if (modal) modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            function closeAddSchoolModalOnOutside(e) {
+                if (e.target.id === 'addSchoolModal') closeAddSchoolModal();
+            }
+
+            function handleSaveNewSchool(e) {
+                e.preventDefault();
+                const nameBn = document.getElementById('newSchoolNameBn').value.trim();
+                const nameEn = document.getElementById('newSchoolNameEn').value.trim();
+
+                if (!nameBn || !nameEn) {
+                    alert('অনুগ্রহ করে বিদ্যালয়ের বাংলা ও ইংরেজি উভয় নামই লিখুন।');
+                    return;
+                }
+
+                const checkedBoxes = document.querySelectorAll('#newSchoolClassesCheckboxes input[type="checkbox"]:checked');
+                let selectedClasses = Array.from(checkedBoxes).map(cb => cb.value);
+                if (selectedClasses.length === 0) {
+                    selectedClasses = ['One', 'Two', 'Three', 'Four', 'Five'];
+                }
+                selectedClasses = sortClassNames(selectedClasses);
+
+                let maxNum = 0;
+                schoolsData.forEach(s => { if (s.num > maxNum) maxNum = s.num; });
+                const newNum = maxNum + 1;
+
+                const newSchool = {
+                    num: newNum,
+                    name_bn: nameBn,
+                    name_en: nameEn,
+                    classes: selectedClasses,
+                    students: [],
+                    total_students: 0,
+                    boys_count: 0,
+                    girls_count: 0
+                };
+
+                schoolsData.push(newSchool);
+                saveData();
+                closeAddSchoolModal();
+                renderApp();
+                renderHomeOverview();
+                renderReports();
+                renderSchoolManageSection();
+                showToast(`"${nameBn}" বিদ্যালয়টি সফলভাবে যুক্ত হয়েছে!`, '🏫');
+            }
+
+            function openEditSchoolModal(schoolNum) {
+                const school = schoolsData.find(s => s.num === schoolNum);
+                if (!school) return;
+
+                document.getElementById('editSchoolNum').value = school.num;
+                document.getElementById('editSchoolNameBn').value = school.name_bn || '';
+                document.getElementById('editSchoolNameEn').value = school.name_en || '';
+
+                const modal = document.getElementById('editSchoolModal');
+                if (modal) modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeEditSchoolModal() {
+                const modal = document.getElementById('editSchoolModal');
+                if (modal) modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            function closeEditSchoolModalOnOutside(e) {
+                if (e.target.id === 'editSchoolModal') closeEditSchoolModal();
+            }
+
+            function handleUpdateSchoolName(e) {
+                e.preventDefault();
+                const num = parseInt(document.getElementById('editSchoolNum').value, 10);
+                const nameBn = document.getElementById('editSchoolNameBn').value.trim();
+                const nameEn = document.getElementById('editSchoolNameEn').value.trim();
+
+                if (!nameBn || !nameEn) {
+                    alert('বিদ্যালয়ের বাংলা ও ইংরেজি উভয় নামই প্রদান করুন।');
+                    return;
+                }
+
+                const school = schoolsData.find(s => s.num === num);
+                if (!school) {
+                    alert('বিদ্যালয় খুঁজে পাওয়া যায়নি!');
+                    return;
+                }
+
+                school.name_bn = nameBn;
+                school.name_en = nameEn;
+
+                (school.students || []).forEach(st => {
+                    st.school_bn = nameBn;
+                    st.school_en = nameEn;
+                    st.school_name = nameBn;
+                });
+
+                saveData();
+                closeEditSchoolModal();
+                renderApp();
+                renderHomeOverview();
+                renderReports();
+                renderSchoolManageSection();
+                showToast(`"${nameBn}" এর নাম সফলভাবে আপডেট হয়েছে!`, '✅');
+            }
+
+            function handleDeleteSchool(num) {
+                const school = schoolsData.find(s => s.num === num);
+                if (!school) {
+                    alert('বিদ্যালয় খুঁজে পাওয়া যায়নি!');
+                    return;
+                }
+
+                const studentCount = (school.students || []).length;
+
+                // VALIDATION: CANNOT DELETE IF SCHOOL HAS STUDENTS
+                if (studentCount > 0) {
+                    alert(`⚠️ ডিলিট করা সম্ভব নয়!\n\n"${school.name_bn}" বিদ্যালয়ে বর্তমানে ${studentCount} জন শিক্ষার্থী ভর্তি রয়েছে।\n\nনিয়ম অনুযায়ী: কোনো বিদ্যালয়ে শিক্ষার্থী নথিভুক্ত থাকলে সেই বিদ্যালয় এবং তার শ্রেণি ডিলিট করা যাবে না।\n\nবিদ্যালয়টি ডিলিট করতে চাইলে প্রথমে শিক্ষার্থীদের অন্য বিদ্যালয়ে স্থানান্তর বা বাদ দিন।`);
+                    return;
+                }
+
+                if (!confirm(`আপনি কি নিশ্চিত যে "${school.name_bn}" বিদ্যালয়টি তালিকা থেকে ডিলিট করতে চান?`)) {
+                    return;
+                }
+
+                schoolsData = schoolsData.filter(s => s.num !== num);
+                saveData();
+                renderApp();
+                renderHomeOverview();
+                renderReports();
+                renderSchoolManageSection();
+                renderSchoolClassManager();
+                showToast(`"${school.name_bn}" সফলভাবে ডিলিট করা হয়েছে!`, '🗑️');
+            }
+
+            function handleFormSchoolChange(selectedClass = null) {
+                const schoolSelect = document.getElementById('fSchoolNum');
+                if (!schoolSelect) return;
+                const schoolNum = parseInt(schoolSelect.value, 10);
+                const school = schoolsData.find(s => s.num === schoolNum);
+                const classSelect = document.getElementById('fClassSelect');
+                if (!classSelect) return;
+
+                if (!school) {
+                    classSelect.innerHTML = '<option value="">-- প্রথমে বিদ্যালয় নির্বাচন করুন --</option>';
+                    return;
+                }
+
+                if (!school.classes || !Array.isArray(school.classes) || school.classes.length === 0) {
+                    const stClasses = (school.students || []).map(st => formatClassName(st.class_name)).filter(Boolean);
+                    school.classes = sortClassNames(stClasses.length > 0 ? stClasses : ['One', 'Two', 'Three', 'Four', 'Five']);
+                }
+
+                let html = '<option value="">-- শ্রেণি নির্বাচন করুন --</option>';
+                school.classes.forEach(c => {
+                    const fmt = formatClassName(c);
+                    html += `<option value="${fmt}">${fmt}</option>`;
+                });
+
+                classSelect.innerHTML = html;
+
+                if (selectedClass) {
+                    const fmt = formatClassName(selectedClass);
+                    if (!school.classes.some(c => formatClassName(c) === fmt)) {
+                        classSelect.innerHTML += `<option value="${fmt}">${fmt}</option>`;
+                        school.classes.push(fmt);
+                        school.classes = sortClassNames(school.classes);
+                    }
+                    classSelect.value = fmt;
+                    document.getElementById('fClass').value = fmt;
+                } else if (school.classes.length > 0) {
+                    classSelect.value = formatClassName(school.classes[0]);
+                    document.getElementById('fClass').value = classSelect.value;
+                }
+            }
+
+            function quickAddClassInForm() {
+                const schoolNum = parseInt(document.getElementById('fSchoolNum').value, 10);
+                const school = schoolsData.find(s => s.num === schoolNum);
+                if (!school) {
+                    alert('অনুগ্রহ করে আগে একটি বিদ্যালয় নির্বাচন করুন।');
+                    return;
+                }
+
+                const input = prompt(`"${school.name_bn}" এর জন্য নতুন শ্রেণির নাম লিখুন (যেমন: Six, Seven, Ten ইত্যাদি):`);
+                if (!input || !input.trim()) return;
+
+                const formatted = formatClassName(input.trim());
+                if (!school.classes) school.classes = [];
+                if (!school.classes.some(c => formatClassName(c) === formatted)) {
+                    school.classes.push(formatted);
+                    school.classes = sortClassNames(school.classes);
+                    saveData();
+                }
+
+                handleFormSchoolChange(formatted);
+                showToast(`"${formatted}" শ্রেণিটি ${school.name_bn} এ যুক্ত হয়েছে!`, '📚');
             }
 
             // Initialize Application
