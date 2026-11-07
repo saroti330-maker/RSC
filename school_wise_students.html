@@ -4312,13 +4312,16 @@
                                 <span>⚙️</span> <span>সিস্টেম সেটিংস</span>
                             </div>
                             <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">সেটিংস ও ডাটাবেজ</h1>
-                            <p style="font-size: 13.5px; color: var(--gray-600);">বিদ্যালয় ও শ্রেণি ব্যবস্থাপনা, পাসওয়ার্ড পরিবর্তন, ডাটাবেজ ব্যাকআপ ও রিস্টোর।</p>
+                            <p style="font-size: 13.5px; color: var(--gray-600);">বিদ্যালয় ও শ্রেণি ব্যবস্থাপনা, শিক্ষক ব্যবস্থাপনা, পাসওয়ার্ড পরিবর্তন, ডাটাবেজ ব্যাকআপ ও রিস্টোর।</p>
                         </div>
 
                         <!-- Settings Sub-Navigation Tabs -->
                         <div class="setting-subnav-bar">
                             <button type="button" class="setting-subnav-btn active" id="btnSubnavSchool" onclick="switchSettingSubTab('school')">
                                 <span>🏫</span> <span>বিদ্যালয় ও শ্রেণি ব্যবস্থাপনা</span>
+                            </button>
+                            <button type="button" class="setting-subnav-btn" id="btnSubnavTeacher" onclick="switchSettingSubTab('teacher')">
+                                <span>👨‍🏫</span> <span>শিক্ষক ব্যবস্থাপনা</span>
                             </button>
                             <button type="button" class="setting-subnav-btn" id="btnSubnavPassword" onclick="switchSettingSubTab('password')">
                                 <span>🔑</span> <span>পাসওয়ার্ড পরিবর্তন</span>
@@ -4404,7 +4407,85 @@
                             </div>
                         </div>
 
-                        <!-- SUBTAB 2: Password Management -->
+                        
+                        <!-- SUBTAB 2: Teacher Management (শিক্ষক ব্যবস্থাপনা) -->
+                        <div id="subtabTeacher" class="setting-subtab-pane" style="display:none;">
+                            <div class="setting-card" style="margin-bottom: 20px;">
+                                <!-- Top Action Bar -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-200);">
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 22px;">👨‍🏫</span>
+                                            <h3 style="font-size: 17px; font-weight: 800; color: #0f172a; margin: 0;">শিক্ষক তথ্য ব্যবস্থাপনা</h3>
+                                        </div>
+                                        <p style="font-size: 12.5px; color: var(--gray-500); margin: 3px 0 0 0;">
+                                            বিভিন্ন শিক্ষা প্রতিষ্ঠানের শিক্ষকদের নাম, পদবী, মোবাইল নং, প্রতিষ্ঠান ও ঠিকানা সংরক্ষণ ও পরিচালনা করুন।
+                                        </p>
+                                    </div>
+                                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                        <span style="background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                            <span>👨‍🏫</span> <span>মোট শিক্ষক:</span> <strong id="teacherListCount" style="color: #1d4ed8; font-size: 14px;">০</strong> <span>জন</span>
+                                        </span>
+                                        <button type="button" class="btn btn-primary" onclick="openAddTeacherModal()" style="font-size: 13.5px; padding: 7px 18px; background: #16a34a; border-color: #16a34a; font-weight: 700; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);">
+                                            <span>➕</span> <span>নতুন শিক্ষক যুক্ত করুন</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Filter & Search Toolbar -->
+                                <div style="background: #f8fafc; border: 1px solid var(--gray-200); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; flex: 1;">
+                                        <div style="min-width: 220px; flex: 1; max-width: 320px;">
+                                            <input type="text" id="settingTeacherSearchInput" class="form-input" 
+                                                   placeholder="🔍 নাম, পদবী, মোবাইল বা ঠিকানা খুঁজুন..." 
+                                                   style="font-size: 13px; padding: 7px 12px; width: 100%;" 
+                                                   oninput="renderTeacherManageSection()">
+                                        </div>
+                                        <div style="min-width: 220px; max-width: 340px;">
+                                            <select id="settingTeacherSchoolFilter" class="form-input" 
+                                                    style="font-size: 13px; padding: 7px 10px; width: 100%; font-weight: 600;" 
+                                                    onchange="renderTeacherManageSection()">
+                                                <option value="ALL">🏫 সকল বিদ্যালয়</option>
+                                                <!-- Dynamically populated -->
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="resetTeacherFilters()" title="ফিল্টার রিসেট করুন" style="padding: 7px 12px; font-size: 12.5px;">
+                                            <span>🔄</span> <span>রিসেট</span>
+                                        </button>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button type="button" class="btn btn-secondary" onclick="exportTeachersCsv()" title="শিক্ষকদের তালিকা CSV ফাইল হিসেবে ডাউনলোড করুন" style="font-size: 12.5px; padding: 6px 12px;">
+                                            <span>📥</span> <span>CSV এক্সপোর্ট</span>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" onclick="printTeachersList()" title="শিক্ষকদের তালিকা প্রিন্ট করুন" style="font-size: 12.5px; padding: 6px 12px;">
+                                            <span>🖨️</span> <span>প্রিন্ট</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Teachers Table -->
+                                <div class="table-responsive" style="max-height: 520px; overflow-y: auto; border: 1px solid var(--gray-200); border-radius: 8px;">
+                                    <table class="report-table" id="settingTeachersTable" style="width: 100%; margin: 0;">
+                                        <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 2;">
+                                            <tr>
+                                                <th style="width: 48px; text-align: center;">নং</th>
+                                                <th style="min-width: 160px;">শিক্ষকের নাম</th>
+                                                <th style="min-width: 130px;">পদবী</th>
+                                                <th style="min-width: 200px;">বিদ্যালয়ের নাম</th>
+                                                <th style="min-width: 140px;">মোবাইল নং</th>
+                                                <th style="min-width: 200px;">শিক্ষকের ঠিকানা</th>
+                                                <th style="width: 160px; text-align: center;">অ্যাকশন</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="settingTeachersTbody">
+                                            <!-- Dynamically populated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUBTAB 3: Password Management -->
                         <div id="subtabPassword" class="setting-subtab-pane" style="display:none;">
                             <div class="setting-card" style="max-width: 600px;">
                                 <div class="setting-card-header">
@@ -4473,6 +4554,7 @@
                                             style="margin-top: 8px; font-size: 11.5px; color: #166534; display: flex; gap: 12px;">
                                             <span>প্রতিষ্ঠান: <strong id="settingSchoolCount">১৯</strong> টি</span>
                                             <span>শিক্ষার্থী: <strong id="settingStudentCount">২২৬</strong> জন</span>
+                                            <span>শিক্ষক: <strong id="settingTeacherCount">০</strong> জন</span>
                                         </div>
                                     </div>
 
@@ -4621,6 +4703,7 @@
                         <div style="margin-top: 6px; font-size: 11.5px; color: #166534; display: flex; gap: 14px; flex-wrap: wrap;">
                             <span>🏫 প্রতিষ্ঠান: <strong>১৯</strong> টি</span>
                             <span>🎓 শিক্ষার্থী: <strong>২২৬</strong> জন</span>
+                            <span>👨‍🏫 শিক্ষক: <strong id="modalTeacherCount">০</strong> জন</span>
                             <span>🕒 স্ট্যাটাস: <strong>সুরক্ষিত</strong></span>
                         </div>
                     </div>
@@ -4955,6 +5038,84 @@
                             <button type="button" class="btn btn-secondary" onclick="closeEditSchoolModal()">বাতিল</button>
                             <button type="submit" class="btn btn-primary">
                                 <span>💾</span> <span>নাম আপডেট সংরক্ষণ করুন</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+                        <!-- Modal: Add / Edit Teacher Profile -->
+            <div id="teacherFormModal" class="modal-overlay" onclick="closeTeacherModalOnOutside(event)">
+                <div class="modal-content" style="max-width: 560px;" onclick="event.stopPropagation()">
+                    <div class="modal-header" id="teacherModalHeader" style="background: linear-gradient(135deg, #059669, #10b981); color: white;">
+                        <h3 style="margin:0; font-size: 16.5px; display: flex; align-items: center; gap: 8px;">
+                            <span id="teacherModalIcon">👨‍🏫</span> <span id="teacherModalTitleText">নতুন শিক্ষক যুক্ত করুন</span>
+                        </h3>
+                        <button type="button" class="modal-close" style="color:white; font-size: 20px; cursor: pointer; background: transparent; border: none;" onclick="closeTeacherModal()">&times;</button>
+                    </div>
+                    <form id="teacherDataForm" onsubmit="handleSaveTeacher(event)" style="padding: 22px;">
+                        <input type="hidden" id="tEditId" value="">
+                        
+                        <!-- 1. Teacher Name -->
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="tName" style="font-weight: 700; color: #0f172a; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                                <span>👤</span> <span>শিক্ষকের নাম</span> <span class="req" style="color: #ef4444;">*</span>
+                            </label>
+                            <input type="text" id="tName" class="form-input" required placeholder="শিক্ষকের পূর্ণ নাম লিখুন (যেমন: মো: রফিকুল ইসলাম)" style="font-size: 13.5px;">
+                        </div>
+
+                        <!-- 2. Designation -->
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="tDesignationSelect" style="font-weight: 700; color: #0f172a; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                                <span>🎓</span> <span>পদবী (Designation)</span> <span class="req" style="color: #ef4444;">*</span>
+                            </label>
+                            <div style="display: flex; gap: 8px;">
+                                <select id="tDesignationSelect" class="form-input" style="font-size: 13.5px;" onchange="handleTeacherDesignationChange()">
+                                    <option value="প্রধান শিক্ষক">প্রধান শিক্ষক (Head Teacher / Principal)</option>
+                                    <option value="সহকারী প্রধান শিক্ষক">সহকারী প্রধান শিক্ষক (Assistant Head Teacher)</option>
+                                    <option value="সহকারী শিক্ষক" selected>সহকারী শিক্ষক (Assistant Teacher)</option>
+                                    <option value="সিনিয়র শিক্ষক">সিনিয়র শিক্ষক (Senior Teacher)</option>
+                                    <option value="সহকারী মৌলভী">সহকারী মৌলভী (Religious Teacher)</option>
+                                    <option value="আইসিটি শিক্ষক">আইসিটি / কম্পিউটার শিক্ষক (ICT Teacher)</option>
+                                    <option value="প্রভাষক">প্রভাষক (Lecturer)</option>
+                                    <option value="খণ্ডকালীন শিক্ষক">খণ্ডকালীন শিক্ষক (Part-time Teacher)</option>
+                                    <option value="__CUSTOM__">✍️ অন্যান্য (নিজে লিখুন)...</option>
+                                </select>
+                                <input type="text" id="tDesignationCustom" class="form-input" placeholder="পদবী লিখুন" style="display: none; font-size: 13.5px; width: 170px;">
+                            </div>
+                        </div>
+
+                        <!-- 3. School Name -->
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="tSchoolSelect" style="font-weight: 700; color: #0f172a; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                                <span>🏫</span> <span>বিদ্যালয়ের নাম</span> <span class="req" style="color: #ef4444;">*</span>
+                            </label>
+                            <select id="tSchoolSelect" class="form-input" style="font-size: 13.5px;" required onchange="handleTeacherSchoolChange()">
+                                <!-- Dynamically populated from schoolsData -->
+                            </select>
+                            <input type="text" id="tSchoolCustom" class="form-input" placeholder="বিদ্যালয়ের নাম লিখুন" style="display: none; margin-top: 6px; font-size: 13.5px;">
+                        </div>
+
+                        <!-- 4. Mobile Number -->
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="tMobile" style="font-weight: 700; color: #0f172a; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                                <span>📱</span> <span>মোবাইল নং</span> <span class="req" style="color: #ef4444;">*</span>
+                            </label>
+                            <input type="tel" id="tMobile" class="form-input" required placeholder="যেমন: 017XXXXXXXX বা 01XXXXXXXXX" style="font-size: 13.5px;">
+                        </div>
+
+                        <!-- 5. Teacher's Address -->
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label class="form-label" for="tAddress" style="font-weight: 700; color: #0f172a; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                                <span>📍</span> <span>শিক্ষকের ঠিকানা</span> <span class="req" style="color: #ef4444;">*</span>
+                            </label>
+                            <textarea id="tAddress" class="form-input" rows="2" required placeholder="গ্রাম/এলাকা, ডাকঘর, উপজেলা, জেলা (যেমন: টেংগনমারী, জলঢাকা, নীলফামারী)" style="font-size: 13.5px; resize: vertical;"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; justify-content: flex-end; padding-top: 12px; border-top: 1px solid var(--gray-200);">
+                            <button type="button" class="btn btn-secondary" onclick="closeTeacherModal()">বাতিল করুন</button>
+                            <button type="submit" class="btn btn-primary" id="tSubmitBtn" style="background: #16a34a; border-color: #16a34a; font-weight: 700;">
+                                <span>💾</span> <span id="tSubmitBtnText">সংরক্ষণ করুন</span>
                             </button>
                         </div>
                     </form>
@@ -5304,34 +5465,55 @@
                     if (!getUrl.endsWith('/')) getUrl += '/';
                     getUrl += 'scsp_nilphamari/schools.json?ts=' + Date.now();
                     const res = await fetch(getUrl);
-                    if (!res.ok) return;
-                    const raw = await res.json();
-                    const cloudData = parseRawSchoolsData(raw);
-                    if (cloudData && cloudData.length > 0) {
-                        const localRawStr = localStorage.getItem(STORAGE_KEY) || JSON.stringify(schoolsData);
-                        const cloudStr = JSON.stringify(cloudData);
-                        if (localRawStr !== cloudStr) {
-                            // ১. সর্বদা লোকাল ডাটাবেজে (localStorage ও IndexedDB) আপডেট তথ্য সংরক্ষণ হবে
-                            try {
-                                localStorage.setItem(STORAGE_KEY, cloudStr);
-                                localStorage.setItem('scsp_last_saved', new Date().toISOString());
-                            } catch (e) { }
-                            saveToIndexedDB(cloudData);
+                    if (res.ok) {
+                        const raw = await res.json();
+                        const cloudData = parseRawSchoolsData(raw);
+                        if (cloudData && cloudData.length > 0) {
+                            const localRawStr = localStorage.getItem(STORAGE_KEY) || JSON.stringify(schoolsData);
+                            const cloudStr = JSON.stringify(cloudData);
+                            if (localRawStr !== cloudStr) {
+                                try {
+                                    localStorage.setItem(STORAGE_KEY, cloudStr);
+                                    localStorage.setItem('scsp_last_saved', new Date().toISOString());
+                                } catch (e) { }
+                                saveToIndexedDB(cloudData);
 
-                            // ২. ব্যবহারকারী চালু করা পেজে অটোমেটিক রেন্ডার করাবে না
-                            if (!isAppInitialized) {
-                                // পেজ ওপেন/রিফ্রেশ হওয়ার প্রথম মুহুর্তে একবার ফ্রেশ ডাটা স্ক্রিনে লোড হবে
-                                isSyncingFromCloud = true;
-                                schoolsData = normalizeAllStudents(cloudData);
-                                renderApp();
-                                renderHomeOverview();
-                                renderReports();
+                                if (!isAppInitialized) {
+                                    isSyncingFromCloud = true;
+                                    schoolsData = normalizeAllStudents(cloudData);
+                                    renderApp();
+                                    renderHomeOverview();
+                                    renderReports();
+                                    updateSettingCounters();
+                                    if (activeKpiMode === 'villages') renderVillageTags();
+                                    setTimeout(() => { isSyncingFromCloud = false; }, 300);
+                                } else {
+                                    console.log('Background cloud update saved to database silently.');
+                                }
+                            }
+                        }
+                    }
+
+                    // Also fetch teachers in background
+                    let getTUrl = config.databaseURL;
+                    if (!getTUrl.endsWith('/')) getTUrl += '/';
+                    getTUrl += 'scsp_nilphamari/teachers.json?ts=' + Date.now();
+                    const tRes = await fetch(getTUrl);
+                    if (tRes.ok) {
+                        const rawT = await tRes.json();
+                        let cloudT = null;
+                        if (Array.isArray(rawT)) cloudT = rawT;
+                        else if (typeof rawT === 'object' && rawT !== null) cloudT = Object.values(rawT);
+                        if (cloudT && cloudT.length > 0) {
+                            const localTStr = localStorage.getItem(TEACHERS_STORAGE_KEY) || JSON.stringify(teachersData);
+                            const cloudTStr = JSON.stringify(cloudT);
+                            if (localTStr !== cloudTStr) {
+                                try {
+                                    localStorage.setItem(TEACHERS_STORAGE_KEY, cloudTStr);
+                                } catch(e) {}
+                                teachersData = cloudT;
+                                renderTeacherManageSection();
                                 updateSettingCounters();
-                                if (activeKpiMode === 'villages') renderVillageTags();
-                                setTimeout(() => { isSyncingFromCloud = false; }, 300);
-                            } else {
-                                // পেজ ইতিমধ্যে চালু অবস্থায় রয়েছে: কোনো নোটিফিকেশন বা ব্যানার দেখাবে না, নিঃশব্দে ডাটাবেজে জমা থাকবে
-                                console.log('Background cloud update saved to database silently.');
                             }
                         }
                     }
@@ -5419,6 +5601,33 @@
                     }, (err) => {
                         console.warn('Firebase sync read error:', err);
                         updateCloudUIState('error', '⚠️ ক্লাউড পারমিশন এরর (Firebase Rules চেক করুন)', config.databaseURL);
+                    });
+
+                    // Listen for teachers data changes in real-time
+                    const teachersRef = firebaseDb.ref('scsp_nilphamari/teachers');
+                    teachersRef.on('value', (snapshot) => {
+                        const rawData = snapshot.val();
+                        let cloudT = null;
+                        if (Array.isArray(rawData)) cloudT = rawData;
+                        else if (typeof rawData === 'object' && rawData !== null) cloudT = Object.values(rawData);
+                        if (cloudT && cloudT.length > 0) {
+                            const localTStr = localStorage.getItem(TEACHERS_STORAGE_KEY) || JSON.stringify(teachersData);
+                            const cloudTStr = JSON.stringify(cloudT);
+                            if (localTStr !== cloudTStr) {
+                                try {
+                                    localStorage.setItem(TEACHERS_STORAGE_KEY, cloudTStr);
+                                } catch(e) {}
+                                teachersData = cloudT;
+                                renderTeacherManageSection();
+                                updateSettingCounters();
+                            }
+                        } else {
+                            if (typeof teachersData !== 'undefined' && teachersData && teachersData.length > 0) {
+                                teachersRef.set(teachersData);
+                            }
+                        }
+                    }, (err) => {
+                        console.warn('Firebase teachers sync read error:', err);
                     });
 
                     // Listen for Auth credentials in real-time
@@ -5550,6 +5759,9 @@
                 }
                 firebaseDb.ref('scsp_nilphamari/schools').set(schoolsData)
                     .then(() => {
+                        if (typeof teachersData !== 'undefined' && teachersData) {
+                            firebaseDb.ref('scsp_nilphamari/teachers').set(teachersData).catch(() => {});
+                        }
                         const creds = getAuthCredentials();
                         firebaseDb.ref('scsp_nilphamari/auth').set(creds).catch(() => { });
                         showToast('বর্তমান সমস্ত ডাটা ক্লাউডে সফলভাবে আপলোড হয়েছে!', '☁️');
@@ -5601,6 +5813,21 @@
                             renderReports();
                             updateSettingCounters();
                             updateCloudUIState('connected', '🟢 ক্লাউড সংযুক্ত (লাইভ সিঙ্ক চালু)', getActiveFirebaseConfig()?.databaseURL);
+
+                            // Sync teachers too
+                            firebaseDb.ref('scsp_nilphamari/teachers').once('value').then(tSnap => {
+                                const tVal = tSnap.val();
+                                let tArr = null;
+                                if (Array.isArray(tVal)) tArr = tVal;
+                                else if (typeof tVal === 'object' && tVal !== null) tArr = Object.values(tVal);
+                                if (tArr && tArr.length > 0) {
+                                    teachersData = tArr;
+                                    localStorage.setItem(TEACHERS_STORAGE_KEY, JSON.stringify(teachersData));
+                                    renderTeacherManageSection();
+                                    updateSettingCounters();
+                                }
+                            }).catch(() => {});
+
                             if (isManual) showToast('ক্লাউড থেকে সর্বশেষ ডাটা রিফ্রেশ করা হয়েছে!', '🔄');
                         } else {
                             if (isManual) alert('ক্লাউড ডাটাবেজে কোনো ডাটা পাওয়া যায়নি। আপনি "লোকাল ডাটা ক্লাউডে আপলোড" করতে পারেন।');
@@ -5613,6 +5840,123 @@
             }
 
             // Application State
+            const TEACHERS_STORAGE_KEY = 'scsp_teachers_data';
+
+            const DEFAULT_TEACHERS = [
+                {
+                    id: "TCH-001",
+                    name: "মোঃ মজিবুল হক",
+                    designation: "প্রধান শিক্ষক",
+                    school_name: "আল হেরা একাডেমি, জলঢাকা",
+                    school_num: 1,
+                    mobile: "01712345671",
+                    address: "জলঢাকা বাজার, জলঢাকা, নীলফামারী",
+                    created_at: "2026-01-15T09:00:00Z"
+                },
+                {
+                    id: "TCH-002",
+                    name: "মোছাঃ নাজমীন আক্তার",
+                    designation: "সহকারী শিক্ষক",
+                    school_name: "বালাপাড়া কাচারী বালিকা বিদ্যালয়",
+                    school_num: 4,
+                    mobile: "01792736408",
+                    address: "বালাপাড়া, জলঢাকা, নীলফামারী",
+                    created_at: "2026-02-10T10:30:00Z"
+                },
+                {
+                    id: "TCH-003",
+                    name: "সুনীল কুমার রায়",
+                    designation: "সহকারী প্রধান শিক্ষক",
+                    school_name: "দীপের পার দোলাপাড়া সরকারি প্রাথমিক বিদ্যালয়",
+                    school_num: 6,
+                    mobile: "01750507376",
+                    address: "দোলাপাড়া, জলঢাকা, নীলফামারী",
+                    created_at: "2026-03-05T11:15:00Z"
+                },
+                {
+                    id: "TCH-004",
+                    name: "মোঃ রফিকুল ইসলাম",
+                    designation: "সিনিয়র শিক্ষক",
+                    school_name: "টেকনিক্যাল স্কুল এন্ড কলেজ",
+                    school_num: 18,
+                    mobile: "01718901234",
+                    address: "মাস্টারপাড়া, জলঢাকা, নীলফামারী",
+                    created_at: "2026-03-20T14:20:00Z"
+                }
+            ];
+
+            let teachersData = loadTeachersData();
+
+            function loadTeachersData() {
+                try {
+                    const stored = localStorage.getItem(TEACHERS_STORAGE_KEY);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            return parsed;
+                        }
+                    }
+                } catch(e) {
+                    console.warn('Failed to load teachers from localStorage:', e);
+                }
+                return JSON.parse(JSON.stringify(DEFAULT_TEACHERS));
+            }
+
+            function saveTeachersData() {
+                try {
+                    localStorage.setItem(TEACHERS_STORAGE_KEY, JSON.stringify(teachersData));
+                } catch(e) {
+                    console.warn('Failed to save teachers to localStorage:', e);
+                }
+
+                // Save to IndexedDB
+                try {
+                    openIndexedDB().then(db => {
+                        if (!db) return;
+                        const tx = db.transaction(IDB_STORE, 'readwrite');
+                        const store = tx.objectStore(IDB_STORE);
+                        store.put({
+                            key: 'teachers_master',
+                            data: teachersData,
+                            timestamp: new Date().toISOString()
+                        });
+                    });
+                } catch(e) {}
+
+                // Save to Firebase Cloud via WebSocket SDK
+                if (firebaseDb && !isSyncingFromCloud) {
+                    try {
+                        firebaseDb.ref('scsp_nilphamari/teachers').set(teachersData).catch(() => {});
+                    } catch(e) {}
+                }
+
+                // Direct REST API PUT to Firebase Database
+                const activeCfg = getActiveFirebaseConfig();
+                if (activeCfg && activeCfg.databaseURL && !isSyncingFromCloud) {
+                    try {
+                        let putUrl = activeCfg.databaseURL;
+                        if (!putUrl.endsWith('/')) putUrl += '/';
+                        putUrl += 'scsp_nilphamari/teachers.json';
+                        fetch(putUrl, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(teachersData)
+                        }).catch(() => {});
+                    } catch(e) {}
+                }
+
+                // Push to REST backend if available
+                try {
+                    if (window.location.protocol.startsWith('http')) {
+                        fetch('/api/save-teachers', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(teachersData)
+                        }).catch(() => {});
+                    }
+                } catch(e) {}
+            }
+
             let schoolsData = loadData();
             let activeKpiMode = null; // null (hidden), 'schools', 'students', 'boys', 'girls', 'villages', 'income'
             let selectedVillageFilter = 'ALL';
@@ -5717,6 +6061,7 @@
             }
 
             function saveData() {
+                saveTeachersData();
                 const now = new Date().toISOString();
                 try {
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(schoolsData));
@@ -5827,10 +6172,12 @@
             function exportDbFile() {
                 const backupObj = {
                     app: 'SchoolWise_Students_SCSP_Nilphamari',
-                    version: '3.0',
+                    version: '4.0',
                     exported_at: new Date().toISOString(),
                     total_schools: schoolsData.length,
-                    schools: schoolsData
+                    total_teachers: (typeof teachersData !== 'undefined' ? teachersData.length : 0),
+                    schools: schoolsData,
+                    teachers: (typeof teachersData !== 'undefined' ? teachersData : [])
                 };
                 const jsonStr = JSON.stringify(backupObj, null, 2);
                 const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
@@ -5868,6 +6215,10 @@
                             return;
                         }
                         if (confirm(`আপনি কি "${file.name}" ফাইলটি থেকে ডাটা রিস্টোর করতে চান? এতে বর্তমান তথ্য আপডেট হয়ে যাবে।`)) {
+                            if (parsed.teachers && Array.isArray(parsed.teachers)) {
+                                teachersData = parsed.teachers;
+                                saveTeachersData();
+                            }
                             schoolsData = importedSchools;
                             saveData();
                             renderApp();
@@ -8269,8 +8620,15 @@
                 schoolsData.forEach(s => totalSt += (s.students ? s.students.length : 0));
                 const scEl = document.getElementById('settingSchoolCount');
                 const stEl = document.getElementById('settingStudentCount');
+                const tcEl = document.getElementById('settingTeacherCount');
+                const tListEl = document.getElementById('teacherListCount');
+                const mTcEl = document.getElementById('modalTeacherCount');
                 if (scEl) scEl.textContent = schoolsData.length;
                 if (stEl) stEl.textContent = totalSt;
+                const tCount = (typeof teachersData !== 'undefined' ? teachersData.length : 0);
+                if (tcEl) tcEl.textContent = tCount;
+                if (tListEl) tListEl.textContent = tCount;
+                if (mTcEl) mTcEl.textContent = tCount;
 
                 const creds = getAuthCredentials();
                 const userInp = document.getElementById('settingNewUserId');
@@ -8338,7 +8696,7 @@
             // ==========================================
 
             function switchSettingSubTab(tabName) {
-                const tabs = ['school', 'password', 'database', 'about'];
+                const tabs = ['school', 'teacher', 'password', 'database', 'about'];
                 tabs.forEach(t => {
                     const btn = document.getElementById('btnSubnav' + t.charAt(0).toUpperCase() + t.slice(1));
                     const pane = document.getElementById('subtab' + t.charAt(0).toUpperCase() + t.slice(1));
@@ -8354,6 +8712,8 @@
                 if (tabName === 'school') {
                     renderSchoolManageSection();
                     renderSchoolClassManager();
+                } else if (tabName === 'teacher') {
+                    renderTeacherManageSection();
                 }
             }
 
@@ -8396,6 +8756,503 @@
                     handleSaveSchoolAddress(schoolNum, input.value);
                     input.blur();
                 }
+            }
+
+            
+            // ==========================================
+            // SETTINGS: TEACHER MANAGEMENT (শিক্ষক ব্যবস্থাপনা)
+            // ==========================================
+
+            function renderTeacherManageSection() {
+                const tbody = document.getElementById('settingTeachersTbody');
+                if (!tbody) return;
+
+                // Update school filter options
+                const filterSelect = document.getElementById('settingTeacherSchoolFilter');
+                if (filterSelect) {
+                    const curVal = filterSelect.value || 'ALL';
+                    let optionsHtml = '<option value="ALL">🏫 সকল বিদ্যালয়</option>';
+                    const sortedSchools = [...schoolsData].sort((a, b) => (a.name_bn || '').localeCompare(b.name_bn || '', 'bn'));
+                    sortedSchools.forEach(s => {
+                        optionsHtml += `<option value="${escapeHtml(s.name_bn)}">${escapeHtml(s.name_bn)}</option>`;
+                    });
+                    filterSelect.innerHTML = optionsHtml;
+                    if (curVal && filterSelect.querySelector(`option[value="${curVal.replace(/"/g, '\\\"')}"]`)) {
+                        filterSelect.value = curVal;
+                    } else {
+                        filterSelect.value = 'ALL';
+                    }
+                }
+
+                const q = (document.getElementById('settingTeacherSearchInput')?.value || '').trim().toLowerCase();
+                const selectedSchool = document.getElementById('settingTeacherSchoolFilter')?.value || 'ALL';
+
+                let filtered = teachersData || [];
+                if (selectedSchool !== 'ALL') {
+                    filtered = filtered.filter(t => (t.school_name || '').trim() === selectedSchool.trim());
+                }
+
+                if (q) {
+                    filtered = filtered.filter(t =>
+                        (t.name && t.name.toLowerCase().includes(q)) ||
+                        (t.designation && t.designation.toLowerCase().includes(q)) ||
+                        (t.school_name && t.school_name.toLowerCase().includes(q)) ||
+                        (t.mobile && t.mobile.toLowerCase().includes(q)) ||
+                        (t.address && t.address.toLowerCase().includes(q))
+                    );
+                }
+
+                // Update counters
+                const countEl = document.getElementById('teacherListCount');
+                if (countEl) countEl.textContent = (teachersData || []).length;
+                const settingCountEl = document.getElementById('settingTeacherCount');
+                if (settingCountEl) settingCountEl.textContent = (teachersData || []).length;
+                const modalTeacherCountEl = document.getElementById('modalTeacherCount');
+                if (modalTeacherCountEl) modalTeacherCountEl.textContent = (teachersData || []).length;
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding: 36px 16px; color: var(--gray-500);">
+                                <div style="font-size: 32px; margin-bottom: 8px;">👨‍🏫</div>
+                                <div style="font-weight: 700; color: #475569; font-size: 14.5px;">কোনো শিক্ষকের তথ্য পাওয়া যায়নি</div>
+                                <div style="font-size: 12.5px; color: var(--gray-400); margin-top: 4px; margin-bottom: 14px;">
+                                    ${q || selectedSchool !== 'ALL' ? 'সার্চ ফিল্টারের সাথে মিলে এমন কোনো শিক্ষক নেই।' : 'এখনও কোনো শিক্ষকের তথ্য যুক্ত করা হয়নি।'}
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="openAddTeacherModal()" style="font-size: 12.5px; padding: 6px 14px; background: #16a34a; border-color: #16a34a;">
+                                    ➕ নতুন শিক্ষক যুক্ত করুন
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                function getDesignationBadge(desig) {
+                    const d = (desig || '').trim();
+                    let bg = '#f1f5f9', color = '#334155', border = '#cbd5e1';
+                    if (d.includes('প্রধান শিক্ষক') && !d.includes('সহকারী')) {
+                        bg = '#eff6ff'; color = '#1e40af'; border = '#bfdbfe';
+                    } else if (d.includes('সহকারী প্রধান')) {
+                        bg = '#eef2ff'; color = '#4338ca'; border = '#c7d2fe';
+                    } else if (d.includes('সহকারী শিক্ষক')) {
+                        bg = '#ecfdf5'; color = '#065f46'; border = '#a7f3d0';
+                    } else if (d.includes('সিনিয়র')) {
+                        bg = '#fefce8'; color = '#854d0e'; border = '#fef08a';
+                    } else if (d.includes('আইসিটি') || d.includes('কম্পিউটার')) {
+                        bg = '#f0f9ff'; color = '#0369a1'; border = '#bae6fd';
+                    } else if (d.includes('প্রভাষক')) {
+                        bg = '#faf5ff'; color = '#6b21a8'; border = '#e9d5ff';
+                    }
+                    return `<span style="display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; background: ${bg}; color: ${color}; border: 1px solid ${border}; white-space: nowrap;">${escapeHtml(d || 'শিক্ষক')}</span>`;
+                }
+
+                let html = '';
+                filtered.forEach((t, idx) => {
+                    const cleanMobile = (t.mobile || '').replace(/[^0-9+]/g, '');
+                    html += `
+                        <tr>
+                            <td style="text-align: center; font-weight: 700; color: #64748b;">#${String(idx + 1).padStart(2, '0')}</td>
+                            <td style="font-weight: 700; color: #0f172a;">
+                                <div style="display: flex; align-items: center; gap: 7px;">
+                                    <span style="font-size: 16px;">👤</span>
+                                    <span>${escapeHtml(t.name || '')}</span>
+                                </div>
+                            </td>
+                            <td>${getDesignationBadge(t.designation)}</td>
+                            <td style="font-weight: 600; color: #1e3a8a;">
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <span>🏫</span>
+                                    <span>${escapeHtml(t.school_name || 'N/A')}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <a href="tel:${cleanMobile}" style="font-family: monospace; font-weight: 700; color: #0284c7; text-decoration: none;" title="কল করুন">
+                                        📞 ${escapeHtml(t.mobile || '')}
+                                    </a>
+                                    <button type="button" class="btn btn-sm" onclick="copyTeacherPhone('${escapeHtml(cleanMobile)}')" title="নম্বর কপি করুন" style="padding: 2px 6px; font-size: 11px; background: #f8fafc; border: 1px solid var(--gray-300); border-radius: 4px; cursor: pointer;">
+                                        📋
+                                    </button>
+                                </div>
+                            </td>
+                            <td style="color: var(--gray-700); font-size: 12.5px;">
+                                <div style="display: flex; align-items: flex-start; gap: 5px;">
+                                    <span style="color: #ef4444; margin-top: 1px;">📍</span>
+                                    <span>${escapeHtml(t.address || 'N/A')}</span>
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <div style="display: inline-flex; gap: 6px;">
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="openEditTeacherModal('${escapeHtml(t.id)}')" title="শিক্ষকের তথ্য সম্পাদনা করুন" style="padding: 4px 10px; font-size: 12px;">
+                                        ✏️ এডিট
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="handleDeleteTeacher('${escapeHtml(t.id)}')" title="শিক্ষকের তথ্য মুছুন" style="padding: 4px 10px; font-size: 12px;">
+                                        🗑️ মুছুন
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+            }
+
+            function openAddTeacherModal() {
+                const modal = document.getElementById('teacherFormModal');
+                if (!modal) return;
+
+                document.getElementById('tEditId').value = '';
+                document.getElementById('teacherModalTitleText').textContent = 'নতুন শিক্ষক যুক্ত করুন';
+                document.getElementById('teacherModalIcon').textContent = '➕';
+                document.getElementById('tSubmitBtnText').textContent = 'শিক্ষক সংরক্ষণ করুন';
+                document.getElementById('teacherModalHeader').style.background = 'linear-gradient(135deg, #059669, #10b981)';
+
+                document.getElementById('tName').value = '';
+                document.getElementById('tDesignationSelect').value = 'সহকারী শিক্ষক';
+                document.getElementById('tDesignationCustom').style.display = 'none';
+                document.getElementById('tDesignationCustom').value = '';
+
+                // Populate school options
+                const schoolSel = document.getElementById('tSchoolSelect');
+                if (schoolSel) {
+                    let sHtml = '<option value="">-- বিদ্যালয় নির্বাচন করুন --</option>';
+                    const sortedSchools = [...schoolsData].sort((a, b) => (a.name_bn || '').localeCompare(b.name_bn || '', 'bn'));
+                    sortedSchools.forEach(s => {
+                        sHtml += `<option value="${escapeHtml(s.name_bn)}" data-num="${s.num}">${escapeHtml(s.name_bn)}</option>`;
+                    });
+                    sHtml += '<option value="__CUSTOM__">✍️ অন্য বিদ্যালয় লিখুন...</option>';
+                    schoolSel.innerHTML = sHtml;
+                    if (sortedSchools.length > 0) {
+                        schoolSel.value = sortedSchools[0].name_bn;
+                    }
+                }
+                document.getElementById('tSchoolCustom').style.display = 'none';
+                document.getElementById('tSchoolCustom').value = '';
+
+                document.getElementById('tMobile').value = '';
+                document.getElementById('tAddress').value = '';
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function openEditTeacherModal(teacherId) {
+                const teacher = (teachersData || []).find(t => String(t.id) === String(teacherId));
+                if (!teacher) {
+                    alert('শিক্ষকের তথ্য পাওয়া যায়নি!');
+                    return;
+                }
+
+                const modal = document.getElementById('teacherFormModal');
+                if (!modal) return;
+
+                document.getElementById('tEditId').value = teacher.id;
+                document.getElementById('teacherModalTitleText').textContent = 'শিক্ষকের তথ্য আপডেট করুন';
+                document.getElementById('teacherModalIcon').textContent = '✏️';
+                document.getElementById('tSubmitBtnText').textContent = 'আপডেট সংরক্ষণ করুন';
+                document.getElementById('teacherModalHeader').style.background = 'linear-gradient(135deg, #0284c7, #0369a1)';
+
+                document.getElementById('tName').value = teacher.name || '';
+
+                // Designation
+                const desigSelect = document.getElementById('tDesignationSelect');
+                const desigCustom = document.getElementById('tDesignationCustom');
+                const standardDesigs = ['প্রধান শিক্ষক', 'সহকারী প্রধান শিক্ষক', 'সহকারী শিক্ষক', 'সিনিয়র শিক্ষক', 'সহকারী মৌলভী', 'আইসিটি শিক্ষক', 'প্রভাষক', 'খণ্ডকালীন শিক্ষক'];
+                if (standardDesigs.includes(teacher.designation)) {
+                    desigSelect.value = teacher.designation;
+                    desigCustom.style.display = 'none';
+                    desigCustom.value = '';
+                } else {
+                    desigSelect.value = '__CUSTOM__';
+                    desigCustom.style.display = 'block';
+                    desigCustom.value = teacher.designation || '';
+                }
+
+                // School
+                const schoolSel = document.getElementById('tSchoolSelect');
+                const schoolCustom = document.getElementById('tSchoolCustom');
+                let sHtml = '<option value="">-- বিদ্যালয় নির্বাচন করুন --</option>';
+                const sortedSchools = [...schoolsData].sort((a, b) => (a.name_bn || '').localeCompare(b.name_bn || '', 'bn'));
+                let matchedSchool = false;
+                sortedSchools.forEach(s => {
+                    const isSelected = (s.name_bn === teacher.school_name);
+                    if (isSelected) matchedSchool = true;
+                    sHtml += `<option value="${escapeHtml(s.name_bn)}" data-num="${s.num}">${escapeHtml(s.name_bn)}</option>`;
+                });
+                sHtml += '<option value="__CUSTOM__">✍️ অন্য বিদ্যালয় লিখুন...</option>';
+                schoolSel.innerHTML = sHtml;
+
+                if (matchedSchool) {
+                    schoolSel.value = teacher.school_name;
+                    schoolCustom.style.display = 'none';
+                    schoolCustom.value = '';
+                } else {
+                    schoolSel.value = '__CUSTOM__';
+                    schoolCustom.style.display = 'block';
+                    schoolCustom.value = teacher.school_name || '';
+                }
+
+                document.getElementById('tMobile').value = teacher.mobile || '';
+                document.getElementById('tAddress').value = teacher.address || '';
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeTeacherModal() {
+                const modal = document.getElementById('teacherFormModal');
+                if (modal) modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            function closeTeacherModalOnOutside(e) {
+                if (e.target.id === 'teacherFormModal') closeTeacherModal();
+            }
+
+            function handleTeacherDesignationChange() {
+                const val = document.getElementById('tDesignationSelect').value;
+                const customInp = document.getElementById('tDesignationCustom');
+                if (val === '__CUSTOM__') {
+                    customInp.style.display = 'block';
+                    customInp.focus();
+                } else {
+                    customInp.style.display = 'none';
+                }
+            }
+
+            function handleTeacherSchoolChange() {
+                const val = document.getElementById('tSchoolSelect').value;
+                const customInp = document.getElementById('tSchoolCustom');
+                if (val === '__CUSTOM__') {
+                    customInp.style.display = 'block';
+                    customInp.focus();
+                } else {
+                    customInp.style.display = 'none';
+                }
+            }
+
+            function handleSaveTeacher(e) {
+                e.preventDefault();
+                const editId = document.getElementById('tEditId').value;
+                const name = document.getElementById('tName').value.trim();
+
+                let designation = document.getElementById('tDesignationSelect').value;
+                if (designation === '__CUSTOM__') {
+                    designation = document.getElementById('tDesignationCustom').value.trim();
+                }
+
+                let schoolName = document.getElementById('tSchoolSelect').value;
+                if (schoolName === '__CUSTOM__') {
+                    schoolName = document.getElementById('tSchoolCustom').value.trim();
+                }
+
+                const mobile = document.getElementById('tMobile').value.trim();
+                const address = document.getElementById('tAddress').value.trim();
+
+                if (!name) {
+                    alert('অনুগ্রহ করে শিক্ষকের নাম লিখুন।');
+                    return;
+                }
+                if (!designation) {
+                    alert('অনুগ্রহ করে পদবী নির্বাচন করুন বা লিখুন।');
+                    return;
+                }
+                if (!schoolName) {
+                    alert('অনুগ্রহ করে বিদ্যালয় নির্বাচন করুন বা লিখুন।');
+                    return;
+                }
+                if (!mobile) {
+                    alert('অনুগ্রহ করে মোবাইল নম্বর লিখুন।');
+                    return;
+                }
+                if (!address) {
+                    alert('অনুগ্রহ করে শিক্ষকের ঠিকানা লিখুন।');
+                    return;
+                }
+
+                const matchedSchoolObj = schoolsData.find(s => s.name_bn === schoolName);
+                const schoolNum = matchedSchoolObj ? matchedSchoolObj.num : null;
+
+                if (editId) {
+                    // Edit existing teacher
+                    const t = (teachersData || []).find(item => String(item.id) === String(editId));
+                    if (t) {
+                        t.name = name;
+                        t.designation = designation;
+                        t.school_name = schoolName;
+                        t.school_num = schoolNum;
+                        t.mobile = mobile;
+                        t.address = address;
+                        t.updated_at = new Date().toISOString();
+                    }
+                    showToast(`"${name}" এর তথ্য সফলভাবে আপডেট হয়েছে!`, '✏️');
+                } else {
+                    // Add new teacher
+                    const newId = 'TCH-' + String(Date.now()).slice(-6);
+                    const newTeacher = {
+                        id: newId,
+                        name: name,
+                        designation: designation,
+                        school_name: schoolName,
+                        school_num: schoolNum,
+                        mobile: mobile,
+                        address: address,
+                        created_at: new Date().toISOString()
+                    };
+                    if (!teachersData) teachersData = [];
+                    teachersData.unshift(newTeacher);
+                    showToast(`"${name}" শিক্ষক হিসেবে সফলভাবে যুক্ত হয়েছেন!`, '👨‍🏫');
+                }
+
+                saveTeachersData();
+                closeTeacherModal();
+                renderTeacherManageSection();
+                updateSettingCounters();
+            }
+
+            function handleDeleteTeacher(teacherId) {
+                const teacher = (teachersData || []).find(t => String(t.id) === String(teacherId));
+                if (!teacher) return;
+
+                if (!confirm(`আপনি কি নিশ্চিত যে "${teacher.name}" (${teacher.designation}) এর তথ্য মুছে ফেলতে চান?`)) {
+                    return;
+                }
+
+                teachersData = (teachersData || []).filter(t => String(t.id) !== String(teacherId));
+                saveTeachersData();
+                renderTeacherManageSection();
+                updateSettingCounters();
+                showToast(`"${teacher.name}" এর তথ্য সফলভাবে মুছে ফেলা হয়েছে!`, '🗑️');
+            }
+
+            function copyTeacherPhone(phone) {
+                if (!phone) return;
+                navigator.clipboard.writeText(phone).then(() => {
+                    showToast(`মোবাইল নম্বর (${phone}) কপি করা হয়েছে!`, '📋');
+                }).catch(() => {
+                    showToast(phone, '📞');
+                });
+            }
+
+            function resetTeacherFilters() {
+                const searchInp = document.getElementById('settingTeacherSearchInput');
+                const filterSel = document.getElementById('settingTeacherSchoolFilter');
+                if (searchInp) searchInp.value = '';
+                if (filterSel) filterSel.value = 'ALL';
+                renderTeacherManageSection();
+            }
+
+            function exportTeachersCsv() {
+                if (!teachersData || teachersData.length === 0) {
+                    alert('এক্সপোর্ট করার মতো কোনো শিক্ষকের তথ্য নেই।');
+                    return;
+                }
+
+                let csvContent = '\uFEFFক্রমিক নং,শিক্ষকের আইডি,শিক্ষকের নাম,পদবী,বিদ্যালয়ের নাম,মোবাইল নং,ঠিকানা,যোগ করার তারিখ\r\n';
+
+                teachersData.forEach((t, i) => {
+                    const row = [
+                        i + 1,
+                        `"${(t.id || '').replace(/"/g, '""')}"`,
+                        `"${(t.name || '').replace(/"/g, '""')}"`,
+                        `"${(t.designation || '').replace(/"/g, '""')}"`,
+                        `"${(t.school_name || '').replace(/"/g, '""')}"`,
+                        `"${(t.mobile || '').replace(/"/g, '""')}"`,
+                        `"${(t.address || '').replace(/"/g, '""')}"`,
+                        `"${(t.created_at || '').slice(0, 10)}"`
+                    ];
+                    csvContent += row.join(',') + '\r\n';
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `Teachers_Directory_SCSP_Nilphamari_${new Date().toISOString().slice(0, 10)}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                showToast('শিক্ষকদের CSV তালিকা ডাউনলোড হয়েছে!', '📥');
+            }
+
+            function printTeachersList() {
+                if (!teachersData || teachersData.length === 0) {
+                    alert('প্রিন্ট করার জন্য কোনো শিক্ষকের তথ্য নেই।');
+                    return;
+                }
+
+                const printWin = window.open('', '_blank', 'width=900,height=650');
+                if (!printWin) {
+                    alert('পপআপ ব্লক রয়েছে। অনুগ্রহ করে পপআপ অনুমোদন করুন।');
+                    return;
+                }
+
+                let rowsHtml = '';
+                teachersData.forEach((t, i) => {
+                    rowsHtml += `
+                        <tr>
+                            <td style="text-align:center; padding: 6px 8px; border: 1px solid #cbd5e1;">${i + 1}</td>
+                            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: bold;">${escapeHtml(t.name || '')}</td>
+                            <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${escapeHtml(t.designation || '')}</td>
+                            <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${escapeHtml(t.school_name || '')}</td>
+                            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-family: monospace;">${escapeHtml(t.mobile || '')}</td>
+                            <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${escapeHtml(t.address || '')}</td>
+                        </tr>
+                    `;
+                });
+
+                printWin.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="bn">
+                    <head>
+                        <meta charset="utf-8">
+                        <title>শিক্ষকদের তালিকা - SCSP Nilphamari</title>
+                        <style>
+                            body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 24px; color: #0f172a; }
+                            h2 { margin: 0 0 4px 0; color: #1e3a8a; }
+                            p { margin: 0 0 16px 0; color: #64748b; font-size: 13px; }
+                            table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+                            th { background: #f1f5f9; padding: 8px; border: 1px solid #cbd5e1; text-align: left; }
+                            @media print {
+                                body { padding: 0; }
+                                button { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 16px; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+                            <div>
+                                <h2>🎓 Rights & Sight for Children (RSC)</h2>
+                                <div style="font-size:14px; font-weight:600; color:#334155;">Sun Child Sponsorship Program (SCSP) - জলঢাকা, নীলফামারী</div>
+                                <p style="margin-top:4px;">শিক্ষক তথ্য বিবরণী ও যোগাযোগ নির্দেশিকা (মোট শিক্ষক: ${teachersData.length} জন)</p>
+                            </div>
+                            <div style="text-align:right;">
+                                <button onclick="window.print()" style="padding: 6px 16px; font-size: 13px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🖨️ প্রিন্ট করুন</button>
+                                <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">তারিখ: ${new Date().toLocaleDateString('bn-BD')}</div>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px; text-align: center;">নং</th>
+                                    <th>শিক্ষকের নাম</th>
+                                    <th>পদবী</th>
+                                    <th>বিদ্যালয়ের নাম</th>
+                                    <th>মোবাইল নং</th>
+                                    <th>ঠিকানা</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </body>
+                    </html>
+                `);
+                printWin.document.close();
             }
 
             function renderSchoolManageSection() {

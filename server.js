@@ -7,6 +7,7 @@ const { exec } = require('child_process');
 const PORT = process.env.PORT || 3000;
 const ROOT_DIR = __dirname;
 const DB_JSON_PATH = path.join(ROOT_DIR, 'database.json');
+const TEACHERS_JSON_PATH = path.join(ROOT_DIR, 'teachers.json');
 const DB_SQLITE_PATH = path.join(ROOT_DIR, 'database.db');
 
 const MIME_TYPES = {
@@ -56,6 +57,46 @@ const server = http.createServer((req, res) => {
             res.end(JSON.stringify({ error: 'database.json not found' }));
             return;
         }
+    }
+
+    // API: Get Teachers JSON
+    if (req.method === 'GET' && reqPath === '/api/teachers') {
+        if (fs.existsSync(TEACHERS_JSON_PATH)) {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=UTF-8' });
+            fs.createReadStream(TEACHERS_JSON_PATH).pipe(res);
+            return;
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=UTF-8' });
+            res.end('[]');
+            return;
+        }
+    }
+
+    // API: Save Teachers to JSON & sync SQLite DB
+    if (req.method === 'POST' && reqPath === '/api/save-teachers') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                fs.writeFileSync(TEACHERS_JSON_PATH, JSON.stringify(data, null, 2), 'utf8');
+
+                // Sync SQLite teachers table if database.db exists
+                if (fs.existsSync(DB_SQLITE_PATH) && Array.isArray(data)) {
+                    try {
+                        const pyCmd = `python -c "import sqlite3, json; c=sqlite3.connect('database.db'); c.execute('DELETE FROM teachers'); [c.execute('INSERT INTO teachers (id, name, designation, school_name, school_num, mobile, address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', (t.get('id'), t.get('name'), t.get('designation'), t.get('school_name'), t.get('school_num'), t.get('mobile'), t.get('address'), t.get('created_at'))) for t in json.load(open('teachers.json', 'r', encoding='utf-8'))]; c.commit(); c.close()"`;
+                        exec(pyCmd);
+                    } catch(err) {}
+                }
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, message: 'Teachers saved successfully.' }));
+            } catch(e) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: e.message }));
+            }
+        });
+        return;
     }
 
     // API: Save Database to JSON & sync SQLite DB file
