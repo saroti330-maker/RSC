@@ -58,16 +58,17 @@ def stats():
 def list_schools():
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute("SELECT num, name_bn, total_students, boys_count, girls_count FROM schools ORDER BY num")
+    cur.execute("SELECT num, name_bn, total_students, boys_count, girls_count, COALESCE(address, '') FROM schools ORDER BY num")
     rows = cur.fetchall()
     conn.close()
 
-    print("=" * 70)
-    print(f"{'ক্র.':<4} {'প্রতিষ্ঠানের নাম':<45} {'মোট':<6} {'ছাত্র':<6} {'ছাত্রী':<6}")
-    print("-" * 70)
+    print("=" * 95)
+    print(f"{'ক্র.':<4} {'প্রতিষ্ঠানের নাম':<40} {'ঠিকানা':<25} {'মোট':<6} {'ছাত্র':<6} {'ছাত্রী':<6}")
+    print("-" * 95)
     for r in rows:
-        print(f"{r[0]:<4} {r[1]:<45} {r[2]:<6} {r[3]:<6} {r[4]:<6}")
-    print("=" * 70)
+        addr = r[5] if r[5] else 'N/A'
+        print(f"{r[0]:<4} {r[1]:<40} {addr:<25} {r[2]:<6} {r[3]:<6} {r[4]:<6}")
+    print("=" * 95)
 
 def search(query):
     conn = get_conn()
@@ -92,7 +93,7 @@ def search(query):
 def export_json():
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute("SELECT num, name_bn, name_en, file_name, total_students, boys_count, girls_count FROM schools ORDER BY num")
+    cur.execute("SELECT num, name_bn, name_en, file_name, total_students, boys_count, girls_count, COALESCE(address, '') FROM schools ORDER BY num")
     schools_rows = cur.fetchall()
 
     export_data = []
@@ -104,6 +105,7 @@ def export_json():
             'num': s[0],
             'name_bn': s[1],
             'name_en': s[2],
+            'address': s[7],
             'file_name': s[3],
             'total_students': s[4],
             'boys_count': s[5],

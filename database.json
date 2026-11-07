@@ -50,7 +50,8 @@
         "disability": "N/A",
         "source_file": "1.Al Hera Accademy Jaldhaka  Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 2,
@@ -103,7 +104,8 @@
         "disability": "N/A",
         "source_file": "2.Anirban Bidda TirthoDetails Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 3,
@@ -156,7 +158,8 @@
         "disability": "N/A",
         "source_file": "3.B,M School Jaldhaka. Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 4,
@@ -1067,7 +1070,8 @@
         "disability": "N/A",
         "source_file": "4.Balapara Kacari Girls School Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 5,
@@ -1159,7 +1163,8 @@
         "disability": "N/A",
         "source_file": "5.Brac High School Jaldhaka Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 6,
@@ -2773,7 +2778,8 @@
         "disability": "N//A",
         "source_file": "6.Diper par Dolapara Govt.Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 7,
@@ -3060,7 +3066,8 @@
         "disability": "N/A",
         "source_file": "7.Future Dream Kinder gurten Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 8,
@@ -5727,7 +5734,8 @@
         "disability": "N/A",
         "source_file": "8.Gabrol Siddiqua Govt Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 9,
@@ -5975,7 +5983,8 @@
         "disability": "N/A",
         "source_file": "9.Gabrol Tahshildarpara Demokhi High Sch.  Details Data Sheet-SCSP (Updated to January'23) - Copy.xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 10,
@@ -6106,7 +6115,8 @@
         "disability": "N/A",
         "source_file": "10.jaldhaka girls school. Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 11,
@@ -6276,7 +6286,8 @@
         "disability": "N/A",
         "source_file": "11.Jaldhaka Gov Pilot High school  Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 12,
@@ -6563,7 +6574,8 @@
         "disability": "N/A",
         "source_file": "12.Jaldhaka Model Pilot Govt. High Sch. Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 13,
@@ -6655,7 +6667,8 @@
         "disability": "N/A",
         "source_file": "13.Kachari Girls School Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 14,
@@ -7605,7 +7618,8 @@
         "disability": "N/A",
         "source_file": "14.Kazirhat Govt. Primary School Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 15,
@@ -7697,7 +7711,8 @@
         "disability": "N//A",
         "source_file": "15.Rangpur Cadet Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 16,
@@ -7867,7 +7882,8 @@
         "disability": "N/A",
         "source_file": "16.Rothbazer Demokhi High School Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 17,
@@ -8037,7 +8053,8 @@
         "disability": "N/A",
         "source_file": "17.Tahashilderpara demokhi High School Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 18,
@@ -8871,7 +8888,8 @@
         "disability": "N/A",
         "source_file": "18.Technical School and Collage Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   },
   {
     "num": 19,
@@ -9080,6 +9098,7 @@
         "disability": "N/A",
         "source_file": "19.Thashildar Para High School Details Data Sheet-SCSP (Updated to January'23).xlsx"
       }
-    ]
+    ],
+    "address": ""
   }
 ]

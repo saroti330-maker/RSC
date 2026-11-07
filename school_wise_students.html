@@ -4356,7 +4356,7 @@
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
                                         <div>
                                             <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">সকল নিবন্ধিত শিক্ষা প্রতিষ্ঠান</h3>
-                                            <p style="font-size: 12px; color: var(--gray-500); margin: 2px 0 0 0;">বিদ্যালয়ের নাম আপডেট করুন বা নতুন প্রতিষ্ঠান যুক্ত করুন। শিক্ষার্থী যুক্ত থাকলে ডিলিট করা যাবে না।</p>
+                                            <p style="font-size: 12px; color: var(--gray-500); margin: 2px 0 0 0;">বিদ্যালয়ের নাম ও ঠিকানা আপডেট করুন বা নতুন প্রতিষ্ঠান যুক্ত করুন। শিক্ষার্থী যুক্ত থাকলে ডিলিট করা যাবে না।</p>
                                         </div>
                                         <div style="display: flex; align-items: center; gap: 8px;">
                                             <input type="text" id="settingSchoolSearchInput" class="form-input" placeholder="🔍 বিদ্যালয় খুঁজুন..." style="max-width: 240px; font-size: 13px; padding: 6px 12px;" oninput="renderSchoolManageSection()">
@@ -4370,6 +4370,7 @@
                                                     <th style="width: 50px; text-align: center;">নং</th>
                                                     <th>বিদ্যালয়ের নাম (বাংলা)</th>
                                                     <th>বিদ্যালয়ের নাম (English)</th>
+                                                    <th style="min-width: 200px;">প্রতিষ্ঠানের ঠিকানা</th>
                                                     <th style="text-align: center;">অনুমোদিত শ্রেণি সমূহ</th>
                                                     <th style="text-align: center; width: 100px;">শিক্ষার্থী</th>
                                                     <th style="text-align: center; width: 180px;">অ্যাকশন</th>
@@ -4907,6 +4908,10 @@
                             <label class="form-label" for="newSchoolNameEn">বিদ্যালয়ের নাম (English) <span class="req">*</span></label>
                             <input type="text" id="newSchoolNameEn" class="form-input" required placeholder="e.g. Jaldhaka Ideal High School">
                         </div>
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="newSchoolAddress">প্রতিষ্ঠানের ঠিকানা</label>
+                            <input type="text" id="newSchoolAddress" class="form-input" placeholder="যেমন: জলঢাকা, নীলফামারী">
+                        </div>
                         <div class="form-group" style="margin-bottom: 16px;">
                             <label class="form-label">প্রাথমিক শ্রেণি সমূহ নির্বাচন করুন:</label>
                             <div id="newSchoolClassesCheckboxes" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; max-height: 140px; overflow-y: auto; padding: 10px; border: 1px solid var(--gray-200); border-radius: 6px; background: #f8fafc;">
@@ -4928,7 +4933,7 @@
                 <div class="modal-content" style="max-width: 520px;" onclick="event.stopPropagation()">
                     <div class="modal-header" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: white;">
                         <h3 style="margin:0; font-size: 16px; display: flex; align-items: center; gap: 8px;">
-                            <span>✏️</span> <span>বিদ্যালয়ের নাম আপডেট করুন</span>
+                            <span>✏️</span> <span>বিদ্যালয়ের নাম ও ঠিকানা আপডেট করুন</span>
                         </h3>
                         <button type="button" class="modal-close" style="color:white; font-size: 20px; cursor: pointer; background: transparent; border: none;" onclick="closeEditSchoolModal()">&times;</button>
                     </div>
@@ -4938,9 +4943,13 @@
                             <label class="form-label" for="editSchoolNameBn">বিদ্যালয়ের নাম (বাংলা) <span class="req">*</span></label>
                             <input type="text" id="editSchoolNameBn" class="form-input" required>
                         </div>
-                        <div class="form-group" style="margin-bottom: 18px;">
+                        <div class="form-group" style="margin-bottom: 14px;">
                             <label class="form-label" for="editSchoolNameEn">বিদ্যালয়ের নাম (English) <span class="req">*</span></label>
                             <input type="text" id="editSchoolNameEn" class="form-input" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 18px;">
+                            <label class="form-label" for="editSchoolAddress">প্রতিষ্ঠানের ঠিকানা</label>
+                            <input type="text" id="editSchoolAddress" class="form-input" placeholder="যেমন: জলঢাকা, নীলফামারী">
                         </div>
                         <div style="display: flex; gap: 10px; justify-content: flex-end;">
                             <button type="button" class="btn btn-secondary" onclick="closeEditSchoolModal()">বাতিল</button>
@@ -5213,6 +5222,7 @@
             function normalizeAllStudents(data) {
                 if (!Array.isArray(data)) return data;
                 data.forEach(s => {
+                    s.address = typeof s.address === 'string' ? s.address : '';
                     s.students = s.students || [];
                     s.students.forEach(st => normalizeStudentClass(st));
 
@@ -8371,6 +8381,23 @@
                 }
             }
 
+            function handleSaveSchoolAddress(schoolNum, newAddress) {
+                const school = schoolsData.find(s => s.num === schoolNum);
+                if (!school) return;
+                const trimmed = (newAddress || '').trim();
+                school.address = trimmed;
+                saveData();
+                showToast(`"${school.name_bn}" এর ঠিকানা সংরক্ষণ করা হয়েছে!`, '📍');
+            }
+
+            function handleSaveSchoolAddressBtn(schoolNum) {
+                const input = document.getElementById(`schoolAddressInput_${schoolNum}`);
+                if (input) {
+                    handleSaveSchoolAddress(schoolNum, input.value);
+                    input.blur();
+                }
+            }
+
             function renderSchoolManageSection() {
                 const tbody = document.getElementById('settingSchoolsTbody');
                 if (!tbody) return;
@@ -8382,12 +8409,13 @@
                     filtered = schoolsData.filter(s =>
                         (s.name_bn && s.name_bn.toLowerCase().includes(q)) ||
                         (s.name_en && s.name_en.toLowerCase().includes(q)) ||
+                        (s.address && s.address.toLowerCase().includes(q)) ||
                         String(s.num).includes(q)
                     );
                 }
 
                 if (filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px; color: var(--gray-500);">কোনো বিদ্যালয় পাওয়া যায়নি।</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 24px; color: var(--gray-500);">কোনো বিদ্যালয় পাওয়া যায়নি।</td></tr>`;
                     return;
                 }
 
@@ -8399,20 +8427,41 @@
                         (classes.length > 5 ? ` <span style="font-size: 11px; color: var(--gray-500);">+${classes.length - 5}টি</span>` : '');
 
                     const canDelete = (studentCount === 0);
+                    const addressVal = s.address || '';
 
                     html += `
                         <tr>
                             <td style="text-align: center; font-weight: 700; color: #64748b;">#${String(s.num).padStart(2, '0')}</td>
-                            <td style="font-weight: 700; color: #0f172a;">${s.name_bn}</td>
-                            <td style="color: var(--gray-600); font-size: 13px;">${s.name_en}</td>
+                            <td style="font-weight: 700; color: #0f172a;">${escapeHtml(s.name_bn || '')}</td>
+                            <td style="color: var(--gray-600); font-size: 13px;">${escapeHtml(s.name_en || '')}</td>
+                            <td style="min-width: 200px;">
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="text" 
+                                           id="schoolAddressInput_${s.num}" 
+                                           class="form-input" 
+                                           value="${escapeHtml(addressVal)}" 
+                                           placeholder="প্রতিষ্ঠানের ঠিকানা লিখুন..." 
+                                           title="ঠিকানা লিখে এন্টার চাপুন বা সংরক্ষণ বাটনে ক্লিক করুন" 
+                                           onchange="handleSaveSchoolAddress(${s.num}, this.value)" 
+                                           onkeydown="if(event.key === 'Enter'){ event.preventDefault(); handleSaveSchoolAddressBtn(${s.num}); }" 
+                                           style="font-size: 12.5px; padding: 5px 8px; width: 100%; min-width: 140px; border-radius: 6px; border: 1px solid var(--gray-300); background: #ffffff;">
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-primary" 
+                                            onclick="handleSaveSchoolAddressBtn(${s.num})" 
+                                            title="ঠিকানা সংরক্ষণ করুন" 
+                                            style="padding: 4px 8px; font-size: 12px; line-height: 1; flex-shrink: 0; background: #f0fdf4; border-color: #86efac; color: #166534;">
+                                        💾
+                                    </button>
+                                </div>
+                            </td>
                             <td style="text-align: center;">${classBadges || '<span style="color:var(--gray-400); font-size: 12px;">শ্রেণি নেই</span>'}</td>
                             <td style="text-align: center; font-weight: 700; color: ${studentCount > 0 ? '#1e40af' : '#94a3b8'};">
                                 ${studentCount} জন
                             </td>
                             <td style="text-align: center;">
                                 <div style="display: inline-flex; gap: 6px;">
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="openEditSchoolModal(${s.num})" title="নাম পরিবর্তন করুন" style="padding: 4px 10px; font-size: 12px;">
-                                        ✏️ নাম আপডেট
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="openEditSchoolModal(${s.num})" title="নাম ও ঠিকানা পরিবর্তন করুন" style="padding: 4px 10px; font-size: 12px;">
+                                        ✏️ আপডেট
                                     </button>
                                     <button type="button" class="btn btn-sm ${canDelete ? 'btn-outline-danger' : 'btn-outline-secondary'}" 
                                         onclick="handleDeleteSchool(${s.num})" 
@@ -8455,7 +8504,7 @@
                             <div style="font-size: 15px; font-weight: 700; color: #1e3a8a;">
                                 #${String(school.num).padStart(2, '0')}. ${school.name_bn}
                             </div>
-                            <div style="font-size: 12px; color: #3b82f6;">${school.name_en} • মোট শিক্ষার্থী: <strong>${studentCount}</strong> জন</div>
+                            <div style="font-size: 12px; color: #3b82f6;">${school.name_en}${school.address ? ` • 📍 ${escapeHtml(school.address)}` : ''} • মোট শিক্ষার্থী: <strong>${studentCount}</strong> জন</div>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                             <select id="newClassSelect" class="form-input" style="font-size: 13px; padding: 6px 10px; width: 170px;" onchange="handleNewClassSelectChange()">
@@ -8611,6 +8660,8 @@
                 if (!modal) return;
                 document.getElementById('newSchoolNameBn').value = '';
                 document.getElementById('newSchoolNameEn').value = '';
+                const addrInp = document.getElementById('newSchoolAddress');
+                if (addrInp) addrInp.value = '';
 
                 // Populate checkboxes
                 const cbContainer = document.getElementById('newSchoolClassesCheckboxes');
@@ -8647,6 +8698,7 @@
                 e.preventDefault();
                 const nameBn = document.getElementById('newSchoolNameBn').value.trim();
                 const nameEn = document.getElementById('newSchoolNameEn').value.trim();
+                const address = (document.getElementById('newSchoolAddress')?.value || '').trim();
 
                 if (!nameBn || !nameEn) {
                     alert('অনুগ্রহ করে বিদ্যালয়ের বাংলা ও ইংরেজি উভয় নামই লিখুন।');
@@ -8668,6 +8720,7 @@
                     num: newNum,
                     name_bn: nameBn,
                     name_en: nameEn,
+                    address: address,
                     classes: selectedClasses,
                     students: [],
                     total_students: 0,
@@ -8692,6 +8745,8 @@
                 document.getElementById('editSchoolNum').value = school.num;
                 document.getElementById('editSchoolNameBn').value = school.name_bn || '';
                 document.getElementById('editSchoolNameEn').value = school.name_en || '';
+                const addrInp = document.getElementById('editSchoolAddress');
+                if (addrInp) addrInp.value = school.address || '';
 
                 const modal = document.getElementById('editSchoolModal');
                 if (modal) modal.classList.add('active');
@@ -8713,6 +8768,7 @@
                 const num = parseInt(document.getElementById('editSchoolNum').value, 10);
                 const nameBn = document.getElementById('editSchoolNameBn').value.trim();
                 const nameEn = document.getElementById('editSchoolNameEn').value.trim();
+                const address = (document.getElementById('editSchoolAddress')?.value || '').trim();
 
                 if (!nameBn || !nameEn) {
                     alert('বিদ্যালয়ের বাংলা ও ইংরেজি উভয় নামই প্রদান করুন।');
@@ -8727,6 +8783,7 @@
 
                 school.name_bn = nameBn;
                 school.name_en = nameEn;
+                school.address = address;
 
                 (school.students || []).forEach(st => {
                     st.school_bn = nameBn;
